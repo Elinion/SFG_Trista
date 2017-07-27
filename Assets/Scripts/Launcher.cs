@@ -95,15 +95,17 @@ public class Launcher : MonoBehaviour
 		}
 	}
 
-	public void Trigger ()
+	public bool Trigger ()
 	{
 		bool didLaunch = LaunchOnFarthestTile ();
 		if (didLaunch) {
 			score.addTurn ();
 			ChangeType ();
+			return true;
 		} else {
 			GameController.instance.GameOver ();
 		}
+		return false;
 	}
 
 	private bool LaunchOnFarthestTile ()
@@ -133,7 +135,7 @@ public class Launcher : MonoBehaviour
 	private bool LaunchOnTile (Tile tile)
 	{
 		if (Type == Tile.TileType.Rainbomb || Type == tile.Type) {
-			PopTile (tile);
+			GrowTile (tile);
 			return true;
 		}
 		if (tile.Type == Tile.TileType.None) {
@@ -148,9 +150,9 @@ public class Launcher : MonoBehaviour
 		return false;
 	}
 
-	private void PopTile (Tile tile)
+	private void GrowTile (Tile tile)
 	{
-		tile.Pop ();
-		score.addPop ();
+		tile.Grow ();
+		score.addGrow ();
 	}
 }

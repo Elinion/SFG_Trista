@@ -5,12 +5,15 @@ using UnityEngine;
 public class ClickManager : MonoBehaviour
 {
 	public static ClickManager instance = null;
+
 	private GameObject[] launchers;
+	private LauncherManager launcherManager;
 
 	void Awake ()
 	{
 		ImplementSingleton ();
 		launchers = GameObject.FindGameObjectsWithTag (Tags.Launcher);
+		launcherManager = GameObject.FindGameObjectWithTag (Tags.LauncherManager).GetComponent<LauncherManager> ();
 	}
 
 	void Update ()
@@ -24,15 +27,10 @@ public class ClickManager : MonoBehaviour
 				TriggerLaunchers (hit.transform.gameObject);
 			}
 		}
-	}
-
-	private void TriggerLaunchers (GameObject clickedObject)
-	{
-		foreach (GameObject launcher in launchers) {
-			if (launcher == clickedObject) {
-				launcher.GetComponent<Launcher> ().Trigger ();
-				TileManager.instance.RemoveTriples ();
-				LauncherManager.instance.UpdateHints ();
+		if (Input.touchCount > 0) {
+			RaycastHit2D hit = Physics2D.Raycast (Input.touches [0].position, Vector2.zero);
+			if (hit.collider != null) {
+				TriggerLaunchers (hit.transform.gameObject);
 			}
 		}
 	}
@@ -43,6 +41,19 @@ public class ClickManager : MonoBehaviour
 			instance = this;
 		} else {
 			Destroy (gameObject);
+		}
+	}
+
+	private void TriggerLaunchers (GameObject clickedObject)
+	{
+		foreach (GameObject launcher in launchers) {
+			if (launcher == clickedObject) {
+				if (launcher.GetComponent<Launcher> ().Trigger ()) {
+					launcherManager.ShiftLaunchers ();
+				}
+				TileManager.instance.RemoveTriples ();
+				launcherManager.UpdateHints ();
+			}
 		}
 	}
 }

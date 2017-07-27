@@ -31,6 +31,7 @@ public class Tile : MonoBehaviour
 	public Sprite red;
 	public Sprite white;
 	public Sprite yellow;
+	public TextMesh levelText;
 
 	private TileType type = TileType.None;
 
@@ -75,9 +76,17 @@ public class Tile : MonoBehaviour
 		}
 	}
 
+	private int level = 1;
+
+	public int Level {
+		get { return level; }
+	}
+
 	void Awake ()
 	{
 		Type = defaultColor;
+		level = 1;
+		levelText.text = "";
 	}
 
 	public bool CanMerge (TileType otherType)
@@ -119,9 +128,16 @@ public class Tile : MonoBehaviour
 		} 
 	}
 
-	public void Pop ()
+	public void Grow ()
 	{
-		Type = TileType.None;
+		level++;
+		levelText.text = level > 1 ? level.ToString () : "";
+	}
+
+	public void ResetLevel ()
+	{
+		level = 1;
+		levelText.text = "";
 	}
 
 	public void Put (TileType type)

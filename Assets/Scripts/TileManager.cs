@@ -38,10 +38,21 @@ public class TileManager : MonoBehaviour
 			return;
 		}
 		if (tiles [first].Type == tiles [second].Type && tiles [first].Type == tiles [third].Type) {
+			int totalTileLevel = 0;
+
 			tiles [first].Type = Tile.TileType.None;
+			totalTileLevel += tiles [first].Level;
+			tiles [first].ResetLevel ();
+
 			tiles [second].Type = Tile.TileType.None;
+			totalTileLevel += tiles [second].Level;
+			tiles [second].ResetLevel ();
+
 			tiles [third].Type = Tile.TileType.None;
-			score.addTriple ();
+			totalTileLevel += tiles [third].Level;
+			tiles [third].ResetLevel ();
+
+			score.addTriple (totalTileLevel);
 		}
 	}
 

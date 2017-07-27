@@ -4,42 +4,27 @@ using UnityEngine;
 
 public class LauncherManager : MonoBehaviour
 {
-	public static LauncherManager instance;
-
-	private List<Launcher> launchers = new List<Launcher> ();
-
-	void Awake ()
-	{
-		ImplementSingleton ();
-		FetchAllLauncherScripts ();
-	}
+	public List<Launcher> launchers = new List<Launcher> ();
 
 	void Start ()
 	{
 		UpdateHints ();
 	}
 
+	public void ShiftLaunchers ()
+	{
+		Tile.TileType toShift = launchers [launchers.Count - 1].Type;
+		for (int i = 0; i < launchers.Count; i++) {
+			Tile.TileType temp = launchers [i].Type;
+			launchers [i].Type = toShift;
+			toShift = temp;
+		}
+	}
+
 	public void UpdateHints ()
 	{
 		foreach (Launcher launcher in launchers) {
 			launcher.ShowHints ();
-		}
-	}
-
-	private void FetchAllLauncherScripts ()
-	{
-		GameObject[] launcherGameObjects = GameObject.FindGameObjectsWithTag (Tags.Launcher);
-		foreach (GameObject launcherGameObject in launcherGameObjects) {
-			launchers.Add (launcherGameObject.GetComponent<Launcher> ());
-		}
-	}
-
-	private void ImplementSingleton ()
-	{
-		if (instance == null) {
-			instance = this;
-		} else {
-			Destroy (gameObject);
 		}
 	}
 }

@@ -9,9 +9,10 @@ public class Score : MonoBehaviour
 
 	private int points = 0;
 	public int pointsPerTurn = 10;
-	public int pointsPerPop = 3;
+	public int pointsPerGrow = 3;
 	public int pointsPerMerge = 9;
 	public int pointsPerTriple = 27;
+	public int extraPointsPerLevel = 10;
 
 	public int Points {
 		get { return points; }
@@ -27,14 +28,14 @@ public class Score : MonoBehaviour
 		points += pointsPerMerge;
 	}
 
-	public void addPop ()
+	public void addGrow ()
 	{
-		points += pointsPerPop;
+		points += pointsPerGrow;
 	}
 
-	public void addTriple ()
+	public void addTriple (int totalLevel = 0)
 	{
-		points += pointsPerTriple;
+		points += pointsPerTriple + totalLevel * extraPointsPerLevel;
 	}
 
 	public void addTurn ()
