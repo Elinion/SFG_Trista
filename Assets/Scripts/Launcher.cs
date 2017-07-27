@@ -14,6 +14,7 @@ public class Launcher : MonoBehaviour
 	public Sprite red;
 	public Sprite white;
 	public Sprite yellow;
+	public Sprite rainbomb;
 
 	private TileManager tileManager;
 	private Tile.TileType type;
@@ -48,6 +49,9 @@ public class Launcher : MonoBehaviour
 			case Tile.TileType.Yellow:
 				sprite = yellow;
 				break;
+			case Tile.TileType.Rainbomb:
+				sprite = rainbomb;
+				break;
 			default:
 				sprite = null;
 				break;
@@ -68,7 +72,7 @@ public class Launcher : MonoBehaviour
 
 	public void ChangeType ()
 	{
-		Tile.TileType newType = (Tile.TileType)Random.Range (0, 8);
+		Tile.TileType newType = (Tile.TileType)Random.Range (0, 9);
 		Type = newType;
 	}
 
@@ -108,6 +112,10 @@ public class Launcher : MonoBehaviour
 
 	private bool LaunchOnTile (Tile tile)
 	{
+		if (type == Tile.TileType.Rainbomb) {
+			tile.Pop ();
+			return true;
+		}
 		bool mergeSuccessful = tile.Merge (type);
 		if (!mergeSuccessful) {
 			if (tile.Type == type) {

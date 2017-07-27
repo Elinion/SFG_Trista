@@ -88,6 +88,7 @@ MonoBehaviour:
   red: {fileID: 21300000, guid: f09eb91a696de4ad089d42fbd22e8a5f, type: 3}
   white: {fileID: 21300000, guid: 2aafa0d868e53406a88798fd305b949e, type: 3}
   yellow: {fileID: 21300000, guid: d87b99e5551ca4b0aaf7763776649b46, type: 3}
+  rainbomb: {fileID: 21300000, guid: 8af2d80ddd66245c4b5ac5c560bcc2af, type: 3}
 --- !u!212 &212133862516333406
 SpriteRenderer:
   m_ObjectHideFlags: 1
