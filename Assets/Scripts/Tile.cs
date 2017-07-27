@@ -82,11 +82,8 @@ public class Tile : MonoBehaviour
 
 	public bool Merge (TileType otherType)
 	{
-		if (Type == TileType.None || Type == TileType.Gray) {
-			Debug.Log ("merged gray or none with " + otherType.ToString ());
-			Type = otherType;
-		} else if (Type == TileType.Blue && otherType == TileType.Yellow
-		           || Type == TileType.Yellow && otherType == TileType.Blue) {
+		if (Type == TileType.Blue && otherType == TileType.Yellow
+		    || Type == TileType.Yellow && otherType == TileType.Blue) {
 			Debug.Log ("merged yellow and blue -> green");
 			Type = TileType.Green;
 		} else if (Type == TileType.Yellow && otherType == TileType.Red

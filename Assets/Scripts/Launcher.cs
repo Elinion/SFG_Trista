@@ -18,6 +18,7 @@ public class Launcher : MonoBehaviour
 
 	private TileManager tileManager;
 	private Tile.TileType type;
+	private Score score;
 
 	public Tile.TileType Type {
 		get { return type; }
@@ -63,6 +64,7 @@ public class Launcher : MonoBehaviour
 	void Awake ()
 	{
 		tileManager = GameObject.FindGameObjectWithTag (Tags.TileManager).GetComponent<TileManager> ();
+		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
 	}
 
 	void Start ()
@@ -80,6 +82,8 @@ public class Launcher : MonoBehaviour
 	{
 		bool didLaunch = LaunchOnFarthestTile ();
 		if (didLaunch) {
+			tileManager.RemoveTriples ();
+			score.addTurn ();
 			ChangeType ();
 		} else {
 			GameController.instance.GameOver ();
@@ -112,18 +116,24 @@ public class Launcher : MonoBehaviour
 
 	private bool LaunchOnTile (Tile tile)
 	{
-		if (type == Tile.TileType.Rainbomb) {
-			tile.Pop ();
+		if (Type == Tile.TileType.Rainbomb || Type == tile.Type) {
+			PopTile (tile);
 			return true;
 		}
-		bool mergeSuccessful = tile.Merge (type);
-		if (!mergeSuccessful) {
-			if (tile.Type == type) {
-				tile.Pop ();
-			} else {
-				return false;
-			}
+		if (tile.Type == Tile.TileType.None || tile.Type == Tile.TileType.Gray) {
+			tile.Type = Type;
+			return true;
+		} 
+		if (tile.Merge (type)) {
+			score.addMerge ();
+			return true;
 		}
-		return true;
+		return false;
+	}
+
+	private void PopTile (Tile tile)
+	{
+		tile.Pop ();
+		score.addPop ();
 	}
 }
