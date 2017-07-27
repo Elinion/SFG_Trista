@@ -8,5 +8,4 @@ public class Tags : MonoBehaviour
 	public const string Launcher = "Launcher";
 	public const string Score = "Score";
 	public const string Tile = "Tile";
-	public const string TileManager = "TileManager";
 }

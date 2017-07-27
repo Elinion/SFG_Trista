@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class ClickManager : MonoBehaviour
 {
+	public static ClickManager instance = null;
 	private GameObject[] launchers;
 
 	void Awake ()
 	{
+		ImplementSingleton ();
 		launchers = GameObject.FindGameObjectsWithTag (Tags.Launcher);
 	}
 
@@ -29,7 +31,18 @@ public class ClickManager : MonoBehaviour
 		foreach (GameObject launcher in launchers) {
 			if (launcher == clickedObject) {
 				launcher.GetComponent<Launcher> ().Trigger ();
+				TileManager.instance.RemoveTriples ();
+				LauncherManager.instance.UpdateHints ();
 			}
+		}
+	}
+
+	private void ImplementSingleton ()
+	{
+		if (instance == null) {
+			instance = this;
+		} else {
+			Destroy (gameObject);
 		}
 	}
 }

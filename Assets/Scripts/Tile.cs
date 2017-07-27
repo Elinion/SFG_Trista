@@ -75,45 +75,57 @@ public class Tile : MonoBehaviour
 		}
 	}
 
-	void Start ()
+	void Awake ()
 	{
 		Type = defaultColor;
 	}
 
-	public bool Merge (TileType otherType)
+	public bool CanMerge (TileType otherType)
 	{
-		if (Type == TileType.Blue && otherType == TileType.Yellow
-		    || Type == TileType.Yellow && otherType == TileType.Blue) {
-			Debug.Log ("merged yellow and blue -> green");
+		return (
+		    Type == TileType.Gray
+		) ||
+		(
+		    Type == TileType.Blue && otherType == TileType.Yellow
+		    || Type == TileType.Yellow && otherType == TileType.Blue
+		) || (
+		    Type == TileType.Yellow && otherType == TileType.Red
+		    || Type == TileType.Red && otherType == TileType.Yellow
+		) || (
+		    Type == TileType.Red && otherType == TileType.Blue
+		    || Type == TileType.Blue && otherType == TileType.Red
+		) || (
+		    Type == TileType.Black && otherType == TileType.White
+		    || Type == TileType.White && otherType == TileType.Black
+		);
+	}
+
+	public void Merge (TileType otherType)
+	{
+		if (Type == TileType.Gray) {
+			Type = otherType;
+		} else if (Type == TileType.Blue && otherType == TileType.Yellow
+		           || Type == TileType.Yellow && otherType == TileType.Blue) {
 			Type = TileType.Green;
 		} else if (Type == TileType.Yellow && otherType == TileType.Red
 		           || Type == TileType.Red && otherType == TileType.Yellow) {
-			Debug.Log ("merged yellow and red -> orange");
 			Type = TileType.Orange;
 		} else if (Type == TileType.Red && otherType == TileType.Blue
 		           || Type == TileType.Blue && otherType == TileType.Red) {
-			Debug.Log ("merged blue and red -> purple");
 			Type = TileType.Purple;
 		} else if (Type == TileType.Black && otherType == TileType.White
 		           || Type == TileType.White && otherType == TileType.Black) {
-			Debug.Log ("merged black and white -> gray");
 			Type = TileType.Gray;
-		} else {
-			Debug.Log ("could not merge colors");
-			return false;
-		}
-		return true;
+		} 
 	}
 
 	public void Pop ()
 	{
-		Debug.Log ("Popped");
 		Type = TileType.None;
 	}
 
 	public void Put (TileType type)
 	{
-		Debug.Log ("Put " + type.ToString ());
 		Type = type;
 	}
 }

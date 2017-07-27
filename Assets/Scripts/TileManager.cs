@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
+	public static TileManager instance = null;
 	public List<Tile> tiles = new List<Tile> ();
 
 	private Score score;
 
 	void Awake ()
 	{
+		ImplementSingleton ();
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
 	}
 
@@ -40,6 +42,15 @@ public class TileManager : MonoBehaviour
 			tiles [second].Type = Tile.TileType.None;
 			tiles [third].Type = Tile.TileType.None;
 			score.addTriple ();
+		}
+	}
+
+	private void ImplementSingleton ()
+	{
+		if (instance == null) {
+			instance = this;
+		} else {
+			Destroy (gameObject);
 		}
 	}
 }

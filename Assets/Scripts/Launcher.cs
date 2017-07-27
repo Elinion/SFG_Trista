@@ -15,8 +15,8 @@ public class Launcher : MonoBehaviour
 	public Sprite white;
 	public Sprite yellow;
 	public Sprite rainbomb;
+	public ParticleSystem mergeHint;
 
-	private TileManager tileManager;
 	private Tile.TileType type;
 	private Score score;
 
@@ -63,12 +63,8 @@ public class Launcher : MonoBehaviour
 
 	void Awake ()
 	{
-		tileManager = GameObject.FindGameObjectWithTag (Tags.TileManager).GetComponent<TileManager> ();
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
-	}
-
-	void Start ()
-	{
+		mergeHint.Pause ();
 		ChangeType ();
 	}
 
@@ -78,11 +74,31 @@ public class Launcher : MonoBehaviour
 		Type = newType;
 	}
 
+	public void ShowHints ()
+	{
+		if (Type == Tile.TileType.Rainbomb) {
+			mergeHint.Stop ();
+			return;
+		}
+		for (int i = 0; i < targetTilesIndexes.Count; i++) {
+			int tileIndex = targetTilesIndexes [i];
+			Tile tile = TileManager.instance.tiles [tileIndex];
+			if (tile.Type == Tile.TileType.None) {
+				continue;
+			}
+			if (tile.CanMerge (Type)) {
+				mergeHint.Play ();
+			} else {
+				mergeHint.Stop ();
+			}
+			break;
+		}
+	}
+
 	public void Trigger ()
 	{
 		bool didLaunch = LaunchOnFarthestTile ();
 		if (didLaunch) {
-			tileManager.RemoveTriples ();
 			score.addTurn ();
 			ChangeType ();
 		} else {
@@ -94,7 +110,7 @@ public class Launcher : MonoBehaviour
 	{
 		for (int i = 0; i < targetTilesIndexes.Count; i++) {
 			int targetTileIndex = targetTilesIndexes [i];
-			Tile targetTile = tileManager.tiles [targetTileIndex];
+			Tile targetTile = TileManager.instance.tiles [targetTileIndex];
 			if (targetTile.Type == Tile.TileType.None && i < targetTilesIndexes.Count - 1) {
 				continue;
 			}
@@ -105,7 +121,7 @@ public class Launcher : MonoBehaviour
 				if (i == 0) {
 					return false;
 				} else {
-					Tile previousTile = tileManager.tiles [targetTilesIndexes [i - 1]];
+					Tile previousTile = TileManager.instance.tiles [targetTilesIndexes [i - 1]];
 					LaunchOnTile (previousTile);
 					return true;
 				}
@@ -120,11 +136,12 @@ public class Launcher : MonoBehaviour
 			PopTile (tile);
 			return true;
 		}
-		if (tile.Type == Tile.TileType.None || tile.Type == Tile.TileType.Gray) {
+		if (tile.Type == Tile.TileType.None) {
 			tile.Type = Type;
 			return true;
 		} 
-		if (tile.Merge (type)) {
+		if (tile.CanMerge (Type)) {
+			tile.Merge (Type);
 			score.addMerge ();
 			return true;
 		}

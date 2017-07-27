@@ -6,8 +6,8 @@ TagManager:
   tags:
   - Launcher
   - Tile
-  - TileManager
   - Score
+  - Fire
   layers:
   - Default
   - TransparentFX
