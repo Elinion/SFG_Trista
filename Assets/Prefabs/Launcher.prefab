@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 212133862516333406}
   - component: {fileID: 114674801891537922}
   - component: {fileID: 61379959644219254}
+  - component: {fileID: 95177980580362654}
   m_Layer: 0
   m_Name: Launcher
   m_TagString: Launcher
@@ -85,8 +86,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1736796498802558}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.1, y: 5, z: 0}
-  m_LocalScale: {x: 0.14999999, y: 0.19999999, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.2, z: 1}
   m_Children:
   - {fileID: 4943852140002598}
   m_Father: {fileID: 0}
@@ -131,6 +132,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5, y: 30}
   m_EdgeRadius: 0
+--- !u!95 &95177980580362654
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1736796498802558}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 342936c6b35844a24960056020ccee38, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114674801891537922
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -143,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: 0
+  animator: {fileID: 95177980580362654}
   targetTilesIndexes: 000000000300000006000000
   black: {fileID: 21300000, guid: 2e0d4e8f377c74ace93954d67f305333, type: 3}
   blue: {fileID: 21300000, guid: c4c6307ffb62b479cbb3346d63e62a4d, type: 3}

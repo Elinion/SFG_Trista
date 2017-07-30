@@ -23,14 +23,27 @@ public class Tile : MonoBehaviour
 
 	public TileType defaultColor;
 	public Sprite black;
+	public Sprite blackTriangle;
 	public Sprite blue;
+	public Sprite blueTriangle;
 	public Sprite gray;
+	public Sprite grayTriangle;
 	public Sprite green;
+	public Sprite greenTriangle;
 	public Sprite orange;
+	public Sprite orangeTriangle;
 	public Sprite purple;
+	public Sprite purpleTriangle;
 	public Sprite red;
+	public Sprite redTriangle;
 	public Sprite white;
+	public Sprite whiteTriangle;
 	public Sprite yellow;
+	public Sprite yellowTriangle;
+	public GameObject topHint;
+	public GameObject rightHint;
+	public GameObject bottomHint;
+	public GameObject leftHint;
 	public TextMesh levelText;
 
 	private TileType type = TileType.None;
@@ -89,24 +102,31 @@ public class Tile : MonoBehaviour
 		levelText.text = "";
 	}
 
-	public bool CanMerge (TileType otherType)
+	public TileType MergeResult (TileType otherType)
 	{
-		return (
-		    Type == TileType.Gray
-		) ||
-		(
-		    Type == TileType.Blue && otherType == TileType.Yellow
-		    || Type == TileType.Yellow && otherType == TileType.Blue
-		) || (
-		    Type == TileType.Yellow && otherType == TileType.Red
-		    || Type == TileType.Red && otherType == TileType.Yellow
-		) || (
-		    Type == TileType.Red && otherType == TileType.Blue
-		    || Type == TileType.Blue && otherType == TileType.Red
-		) || (
-		    Type == TileType.Black && otherType == TileType.White
-		    || Type == TileType.White && otherType == TileType.Black
-		);
+		if (Type == TileType.Gray) {
+			return otherType;
+		}
+		if (Type == TileType.Blue && otherType == TileType.Yellow
+		    || Type == TileType.Yellow && otherType == TileType.Blue) {
+			return TileType.Green;
+		}
+		if (
+			Type == TileType.Yellow && otherType == TileType.Red
+			|| Type == TileType.Red && otherType == TileType.Yellow) {
+			return TileType.Orange;
+		}
+		if (
+			Type == TileType.Red && otherType == TileType.Blue
+			|| Type == TileType.Blue && otherType == TileType.Red) {
+			return TileType.Purple;
+		}
+		if (
+			Type == TileType.Black && otherType == TileType.White
+			|| Type == TileType.White && otherType == TileType.Black) {
+			return TileType.Gray;
+		}
+		return TileType.None;
 	}
 
 	public void Merge (TileType otherType)
@@ -134,6 +154,14 @@ public class Tile : MonoBehaviour
 		levelText.text = level > 1 ? level.ToString () : "";
 	}
 
+	public void HideHints ()
+	{
+		topHint.SetActive (false);
+		rightHint.SetActive (false);
+		bottomHint.SetActive (false);
+		leftHint.SetActive (false);
+	}
+
 	public void ResetLevel ()
 	{
 		level = 1;
@@ -143,5 +171,56 @@ public class Tile : MonoBehaviour
 	public void Put (TileType type)
 	{
 		Type = type;
+	}
+
+	public void ShowTopHint (TileType type)
+	{
+		ShowHint (topHint, type);
+	}
+
+	public void ShowRightHint (TileType type)
+	{
+		ShowHint (rightHint, type);
+	}
+
+	public void ShowBottomHint (TileType type)
+	{
+		ShowHint (bottomHint, type);
+	}
+
+	public void ShowLeftHint (TileType type)
+	{
+		ShowHint (leftHint, type);
+	}
+
+	private void ShowHint (GameObject hint, TileType type)
+	{
+		hint.SetActive (true);
+		hint.GetComponent<SpriteRenderer> ().sprite = TypeToHintSprite (type);
+	}
+
+	private Sprite TypeToHintSprite (TileType type)
+	{
+		switch (type) {
+		case TileType.Black:
+			return blackTriangle;
+		case TileType.Blue:
+			return blueTriangle;
+		case TileType.Green:
+			return greenTriangle;
+		case TileType.Orange:
+			return orangeTriangle;
+		case TileType.Purple:
+			return purpleTriangle;
+		case TileType.Red:
+			return redTriangle;
+		case TileType.White:
+			return whiteTriangle;
+		case TileType.Yellow:
+			return yellowTriangle;
+		case TileType.Gray:
+			return grayTriangle;
+		}
+		return null;
 	}
 }

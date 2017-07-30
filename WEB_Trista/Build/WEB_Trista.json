@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "WEB_Trista.data.unityweb",
+"asmCodeUrl": "WEB_Trista.asm.code.unityweb",
+"asmMemoryUrl": "WEB_Trista.asm.memory.unityweb",
+"asmFrameworkUrl": "WEB_Trista.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}

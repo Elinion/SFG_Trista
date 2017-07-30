@@ -48,11 +48,7 @@ public class ClickManager : MonoBehaviour
 	{
 		foreach (GameObject launcher in launchers) {
 			if (launcher == clickedObject) {
-				if (launcher.GetComponent<Launcher> ().Trigger ()) {
-					launcherManager.ShiftLaunchers ();
-				}
-				TileManager.instance.RemoveTriples ();
-				launcherManager.UpdateHints ();
+				launcherManager.TriggerLauncher (launcher.GetComponent<Launcher> ());
 			}
 		}
 	}

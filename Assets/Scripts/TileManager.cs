@@ -15,6 +15,13 @@ public class TileManager : MonoBehaviour
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
 	}
 
+	public void HideHints ()
+	{
+		foreach (Tile tile in tiles) {
+			tile.HideHints ();
+		}
+	}
+
 	public void RemoveTriples ()
 	{
 		RemoveTripleIfIdentical (0, 1, 2);

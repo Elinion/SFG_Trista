@@ -5,6 +5,7 @@ using UnityEngine;
 public class Launcher : MonoBehaviour
 {
 	public int position;
+	public Animator animator;
 	public List<int> targetTilesIndexes = new List<int> ();
 	public Sprite black;
 	public Sprite blue;
@@ -74,6 +75,11 @@ public class Launcher : MonoBehaviour
 		Type = newType;
 	}
 
+	public void HideHints ()
+	{
+		mergeHint.Stop ();
+	}
+
 	public void ShowHints ()
 	{
 		if (Type == Tile.TileType.Rainbomb) {
@@ -86,8 +92,19 @@ public class Launcher : MonoBehaviour
 			if (tile.Type == Tile.TileType.None) {
 				continue;
 			}
-			if (tile.CanMerge (Type)) {
-				mergeHint.Play ();
+			Tile.TileType mergeResult = tile.MergeResult (Type);
+			if (mergeResult != Tile.TileType.None) {
+				//mergeHint.Play ();
+				if (position < 3) {
+					tile.ShowTopHint (mergeResult);
+				} else if (position < 6) { 
+					tile.ShowRightHint (mergeResult);
+				} else if (position < 9) {
+					tile.ShowBottomHint (mergeResult);
+				} else {
+					tile.ShowLeftHint (mergeResult);
+				}
+
 			} else {
 				mergeHint.Stop ();
 			}
@@ -100,7 +117,6 @@ public class Launcher : MonoBehaviour
 		bool didLaunch = LaunchOnFarthestTile ();
 		if (didLaunch) {
 			score.addTurn ();
-			ChangeType ();
 			return true;
 		} else {
 			GameController.instance.GameOver ();
@@ -142,7 +158,7 @@ public class Launcher : MonoBehaviour
 			tile.Type = Type;
 			return true;
 		} 
-		if (tile.CanMerge (Type)) {
+		if (tile.MergeResult (Type) != Tile.TileType.None) {
 			tile.Merge (Type);
 			score.addMerge ();
 			return true;
