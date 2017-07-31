@@ -6,16 +6,13 @@ public class LauncherManager : MonoBehaviour
 {
 	public static LauncherManager instance = null;
 
-	public delegate void OnLaunchersShiftEndAction ();
-
-	public static event OnLaunchersShiftEndAction OnLaunchersShiftEnd;
-
 	public List<Launcher> launchers = new List<Launcher> ();
 	public List<Transform> launcherHolders = new List<Transform> ();
+	public float launcherAnimatorSpeed;
 
-	private bool shouldUpdateLauncherHolders = false;
-	private bool animationHasStarted = false;
-	private Launcher triggeredLauncher = null;
+	public delegate void OnShiftEndAction ();
+
+	public static event OnShiftEndAction OnShiftEnd;
 
 	void Awake ()
 	{
@@ -25,25 +22,9 @@ public class LauncherManager : MonoBehaviour
 	void Start ()
 	{
 		UpdateHints ();
-		Board.OnRemoveTriplesEnd += UpdateLaunchers;
-	}
-
-	void Update ()
-	{
-		HandleLaunchersAnimation ();
-	}
-
-	public void TriggerLauncher (Launcher launcher)
-	{
-		bool didLaunch = launcher.GetComponent<Launcher> ().Trigger ();
-		if (didLaunch) {
-			triggeredLauncher = launcher;
-			ClickManager.instance.enabled = false;
-			HideHints ();
-
-			// momemtarily managed by the triggered launcher
-			// this will be move to a launcherHolder script
-			// ShiftLaunchers ();
+		Board.OnRemoveTriplesEnd += ShiftLaunchers;
+		foreach (Launcher launcher in launchers) {
+			launcher.GetComponent<Animator> ().speed = launcherAnimatorSpeed;
 		}
 	}
 
@@ -55,28 +36,6 @@ public class LauncherManager : MonoBehaviour
 			launchers [i].targetTilesIndexes = toShift;
 			toShift = temp;
 		}
-	}
-
-	private void HandleLaunchersAnimation ()
-	{
-		if (shouldUpdateLauncherHolders) {
-			bool readyToUpdateLaunchers = !launchers [0].animator.GetCurrentAnimatorStateInfo (0).IsName ("Idle");
-			if (readyToUpdateLaunchers) {
-				shouldUpdateLauncherHolders = false;
-				animationHasStarted = true;
-			}
-		} else if (animationHasStarted) {
-			bool animationIsFinished = launchers [0].animator.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1f;
-			if (animationIsFinished) {
-				animationHasStarted = false;
-				OnLaunchersShiftEnd ();
-			}
-		}
-	}
-
-	private void HideHints ()
-	{
-		Board.instance.HideHints ();
 	}
 
 	private void ImplementSingleton ()
@@ -112,7 +71,26 @@ public class LauncherManager : MonoBehaviour
 		MoveLaunchers ();
 		ChangeLaunchersTargets ();
 		UpdateLauncherPositions ();
-		shouldUpdateLauncherHolders = true;
+
+		float animationDuration = 1f / launcherAnimatorSpeed;
+		StartCoroutine (OnShiftLaunchersEnd (animationDuration));
+	}
+
+	IEnumerator OnShiftLaunchersEnd (float time)
+	{
+		yield return new WaitForSeconds (time);
+		yield return new WaitUntil (() => {
+			foreach (Launcher launcher in launchers) {
+				if (launcher.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).normalizedTime <= 1f) {
+					return false;
+				}
+			}
+			return true;
+		});
+		OnShiftEnd ();
+		UpdateHints ();
+		UpdateLauncherHolders ();
+		ClickManager.instance.enabled = true;
 	}
 
 	private void UpdateHints ()
@@ -135,13 +113,5 @@ public class LauncherManager : MonoBehaviour
 		foreach (Launcher launcher in launchers) {
 			launcher.position = (launcher.position + 1) % 12;
 		}
-	}
-
-	private void UpdateLaunchers ()
-	{
-		UpdateHints ();
-		UpdateLauncherHolders ();
-		triggeredLauncher.ChangeType ();
-		ClickManager.instance.enabled = true;
 	}
 }

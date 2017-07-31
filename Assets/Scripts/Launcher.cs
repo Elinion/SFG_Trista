@@ -30,6 +30,10 @@ public class Launcher : MonoBehaviour
 	private Tile.TileType type;
 	private Score score;
 
+	public delegate void OnLaunchAction ();
+
+	public static event OnLaunchAction OnLaunchEnd;
+
 	public Tile.TileType Type {
 		get { return type; }
 		set {
@@ -128,17 +132,17 @@ public class Launcher : MonoBehaviour
 		}
 	}
 
-	public bool Trigger ()
+	public void Trigger ()
 	{
 		int distance = DistanceFromValidTarget ();
 		if (distance != -1) {
+			ClickManager.instance.enabled = false;
 			ShowBulletAnimation (distance);
 			Tile target = Board.instance.tiles [targetTilesIndexes [distance]];
 			LaunchOnTile (target);
+			LauncherManager.OnShiftEnd += SetRandomType;
 			StartCoroutine (OnShootBulletAnimationFinished ((float)distance, target));
-			return true;
 		}
-		return false;
 	}
 
 	private int DistanceFromValidTarget ()
@@ -192,6 +196,12 @@ public class Launcher : MonoBehaviour
 		score.addMergePoints ();
 	}
 
+	private void SetRandomType ()
+	{
+		ChangeType ();
+		LauncherManager.OnShiftEnd -= SetRandomType;
+	}
+
 	private void SetTile (Tile tile)
 	{
 		tile.Type = Type;
@@ -226,6 +236,6 @@ public class Launcher : MonoBehaviour
 		);
 		bulletAnimator.SetTrigger ("Idle");
 		tile.Refresh ();
-		LauncherManager.instance.ShiftLaunchers ();
+		OnLaunchEnd ();
 	}
 }

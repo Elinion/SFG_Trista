@@ -80,12 +80,6 @@ public class Board : MonoBehaviour
 			RemoveTile (second);
 			RemoveTile (third);
 			score.addTriple (totalTileLevel);
-		
-			float animationDuration = 1f / tiles [first].GetComponent<Animator> ().speed;
-			StartCoroutine (OnRemoveTriplesAnimationFinished (animationDuration));
-
-		} else {
-			OnRemoveTriplesEnd ();
 		}
 	}
 
@@ -97,6 +91,7 @@ public class Board : MonoBehaviour
 			tiles [index].ResetLevel ();
 			tiles [index].Refresh ();
 		}
+		tilesToRefresh.Clear ();
 		OnRemoveTriplesEnd ();
 	}
 
@@ -110,11 +105,18 @@ public class Board : MonoBehaviour
 		RemoveTripleIfIdentical (2, 5, 8);
 		RemoveTripleIfIdentical (0, 4, 8);
 		RemoveTripleIfIdentical (2, 4, 6);
+
+		if (tilesToRefresh.Count > 0) {
+			float animationDuration = 1f / tiles [0].GetComponent<Animator> ().speed;
+			StartCoroutine (OnRemoveTriplesAnimationFinished (animationDuration));
+		} else {
+			OnRemoveTriplesEnd ();
+		}
 	}
 
 	private void SubscribeEvents ()
 	{
-		LauncherManager.OnLaunchersShiftEnd += HideHints;
-		LauncherManager.OnLaunchersShiftEnd += RemoveTriples;
+		Launcher.OnLaunchEnd += HideHints;
+		Launcher.OnLaunchEnd += RemoveTriples;
 	}
 }

@@ -46,7 +46,7 @@ public class ClickManager : MonoBehaviour
 	{
 		foreach (GameObject launcher in launchers) {
 			if (launcher == clickedObject) {
-				LauncherManager.instance.TriggerLauncher (launcher.GetComponent<Launcher> ());
+				launcher.GetComponent<Launcher> ().Trigger ();
 			}
 		}
 	}
