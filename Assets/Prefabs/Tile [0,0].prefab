@@ -21,13 +21,14 @@ GameObject:
   - component: {fileID: 4410832611987852}
   - component: {fileID: 212322176057718534}
   - component: {fileID: 114321305974557912}
+  - component: {fileID: 95450078203463124}
   m_Layer: 0
   m_Name: Tile [0,0]
   m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1334812337370744
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,9 +168,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1197775812421392}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 4573247182870614}
   - {fileID: 4161587439052744}
@@ -187,7 +188,7 @@ Transform:
   m_GameObject: {fileID: 1530792693533438}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 4410832611987852}
   m_RootOrder: 0
@@ -224,6 +225,23 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!95 &95450078203463124
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1197775812421392}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 42e58b5e3992c4968bb489f763ed8674, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!102 &102807256680488552
 TextMesh:
   serializedVersion: 3
@@ -256,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1435da7b91aa43b18bd357edd96541b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorSpeed: 4
   defaultColor: 0
   black: {fileID: 21300000, guid: 778c2abf2d57943199f770f3238a309f, type: 3}
   blackTriangle: {fileID: 21300000, guid: cf8f82ae742524776b4431fc7d5b379e, type: 3}

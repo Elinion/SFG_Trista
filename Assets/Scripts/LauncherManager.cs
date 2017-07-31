@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class LauncherManager : MonoBehaviour
 {
+	public static LauncherManager instance = null;
+
+	public delegate void OnLaunchersShiftEndAction ();
+
+	public static event OnLaunchersShiftEndAction OnLaunchersShiftEnd;
+
 	public List<Launcher> launchers = new List<Launcher> ();
 	public List<Transform> launcherHolders = new List<Transform> ();
 
@@ -11,9 +17,15 @@ public class LauncherManager : MonoBehaviour
 	private bool animationHasStarted = false;
 	private Launcher triggeredLauncher = null;
 
+	void Awake ()
+	{
+		ImplementSingleton ();
+	}
+
 	void Start ()
 	{
 		UpdateHints ();
+		Board.OnRemoveTriplesEnd += UpdateLaunchers;
 	}
 
 	void Update ()
@@ -23,10 +35,15 @@ public class LauncherManager : MonoBehaviour
 
 	public void TriggerLauncher (Launcher launcher)
 	{
-		if (launcher.GetComponent<Launcher> ().Trigger ()) {
+		bool didLaunch = launcher.GetComponent<Launcher> ().Trigger ();
+		if (didLaunch) {
 			triggeredLauncher = launcher;
+			ClickManager.instance.enabled = false;
 			HideHints ();
-			ShiftLaunchers ();
+
+			// momemtarily managed by the triggered launcher
+			// this will be move to a launcherHolder script
+			// ShiftLaunchers ();
 		}
 	}
 
@@ -52,20 +69,23 @@ public class LauncherManager : MonoBehaviour
 			bool animationIsFinished = launchers [0].animator.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1f;
 			if (animationIsFinished) {
 				animationHasStarted = false;
-				TileManager.instance.RemoveTriples ();
-				UpdateHints ();
-				UpdateLauncherHolders ();
-				triggeredLauncher.ChangeType ();
+				OnLaunchersShiftEnd ();
 			}
 		}
 	}
 
 	private void HideHints ()
 	{
-		foreach (Launcher launcher in launchers) {
-			launcher.HideHints ();
+		Board.instance.HideHints ();
+	}
+
+	private void ImplementSingleton ()
+	{
+		if (instance == null) {
+			instance = this;
+		} else {
+			Destroy (gameObject);
 		}
-		TileManager.instance.HideHints ();
 	}
 
 	private void MoveLaunchers ()
@@ -87,7 +107,7 @@ public class LauncherManager : MonoBehaviour
 		}
 	}
 
-	private void ShiftLaunchers ()
+	public void ShiftLaunchers ()
 	{
 		MoveLaunchers ();
 		ChangeLaunchersTargets ();
@@ -115,5 +135,13 @@ public class LauncherManager : MonoBehaviour
 		foreach (Launcher launcher in launchers) {
 			launcher.position = (launcher.position + 1) % 12;
 		}
+	}
+
+	private void UpdateLaunchers ()
+	{
+		UpdateHints ();
+		UpdateLauncherHolders ();
+		triggeredLauncher.ChangeType ();
+		ClickManager.instance.enabled = true;
 	}
 }

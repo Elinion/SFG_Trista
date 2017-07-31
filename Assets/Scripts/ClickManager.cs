@@ -7,13 +7,11 @@ public class ClickManager : MonoBehaviour
 	public static ClickManager instance = null;
 
 	private GameObject[] launchers;
-	private LauncherManager launcherManager;
 
 	void Awake ()
 	{
 		ImplementSingleton ();
 		launchers = GameObject.FindGameObjectsWithTag (Tags.Launcher);
-		launcherManager = GameObject.FindGameObjectWithTag (Tags.LauncherManager).GetComponent<LauncherManager> ();
 	}
 
 	void Update ()
@@ -48,7 +46,7 @@ public class ClickManager : MonoBehaviour
 	{
 		foreach (GameObject launcher in launchers) {
 			if (launcher == clickedObject) {
-				launcherManager.TriggerLauncher (launcher.GetComponent<Launcher> ());
+				LauncherManager.instance.TriggerLauncher (launcher.GetComponent<Launcher> ());
 			}
 		}
 	}

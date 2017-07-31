@@ -21,6 +21,7 @@ public class Tile : MonoBehaviour
 		None
 	}
 
+	public float animatorSpeed;
 	public TileType defaultColor;
 	public Sprite black;
 	public Sprite blackTriangle;
@@ -50,43 +51,7 @@ public class Tile : MonoBehaviour
 
 	public TileType Type {
 		get { return type; }
-		set {
-			type = value;
-			Sprite sprite;
-			switch (value) {
-			case TileType.Black:
-				sprite = black;
-				break;
-			case TileType.Blue:
-				sprite = blue;
-				break;
-			case TileType.Gray:
-				sprite = gray;
-				break;
-			case TileType.Green:
-				sprite = green;
-				break;
-			case TileType.Orange:
-				sprite = orange;
-				break;
-			case TileType.Purple:
-				sprite = purple;
-				break;
-			case TileType.Red:
-				sprite = red;
-				break;
-			case TileType.White:
-				sprite = white;
-				break;
-			case TileType.Yellow:
-				sprite = yellow;
-				break;
-			default:
-				sprite = null;
-				break;
-			}
-			GetComponent<SpriteRenderer> ().sprite = sprite;
-		}
+		set { type = value; }
 	}
 
 	private int level = 1;
@@ -95,38 +60,46 @@ public class Tile : MonoBehaviour
 		get { return level; }
 	}
 
+	public static TileType MergeResult (TileType type, TileType otherType)
+	{
+		if (type == TileType.Gray && otherType != TileType.Gray) {
+			return otherType;
+		}
+		if (otherType == TileType.Gray && type != TileType.Gray) {
+			return type;
+		}
+		if (type == TileType.Blue && otherType == TileType.Yellow
+		    || type == TileType.Yellow && otherType == TileType.Blue) {
+			return TileType.Green;
+		}
+		if (
+			type == TileType.Yellow && otherType == TileType.Red
+			|| type == TileType.Red && otherType == TileType.Yellow) {
+			return TileType.Orange;
+		}
+		if (
+			type == TileType.Red && otherType == TileType.Blue
+			|| type == TileType.Blue && otherType == TileType.Red) {
+			return TileType.Purple;
+		}
+		if (
+			type == TileType.Black && otherType == TileType.White
+			|| type == TileType.White && otherType == TileType.Black) {
+			return TileType.Gray;
+		}
+		return TileType.None;
+	}
+
 	void Awake ()
 	{
 		Type = defaultColor;
 		level = 1;
-		levelText.text = "";
 	}
 
-	public TileType MergeResult (TileType otherType)
+	void Start ()
 	{
-		if (Type == TileType.Gray) {
-			return otherType;
-		}
-		if (Type == TileType.Blue && otherType == TileType.Yellow
-		    || Type == TileType.Yellow && otherType == TileType.Blue) {
-			return TileType.Green;
-		}
-		if (
-			Type == TileType.Yellow && otherType == TileType.Red
-			|| Type == TileType.Red && otherType == TileType.Yellow) {
-			return TileType.Orange;
-		}
-		if (
-			Type == TileType.Red && otherType == TileType.Blue
-			|| Type == TileType.Blue && otherType == TileType.Red) {
-			return TileType.Purple;
-		}
-		if (
-			Type == TileType.Black && otherType == TileType.White
-			|| Type == TileType.White && otherType == TileType.Black) {
-			return TileType.Gray;
-		}
-		return TileType.None;
+		GetComponent<Animator> ().speed = animatorSpeed;
+		Refresh ();
 	}
 
 	public void Merge (TileType otherType)
@@ -151,7 +124,6 @@ public class Tile : MonoBehaviour
 	public void Grow ()
 	{
 		level++;
-		levelText.text = level > 1 ? level.ToString () : "";
 	}
 
 	public void HideHints ()
@@ -162,15 +134,21 @@ public class Tile : MonoBehaviour
 		leftHint.SetActive (false);
 	}
 
-	public void ResetLevel ()
-	{
-		level = 1;
-		levelText.text = "";
-	}
-
 	public void Put (TileType type)
 	{
 		Type = type;
+	}
+
+	public void Refresh ()
+	{
+		RefreshSprite ();
+		RefreshLevel ();
+	}
+
+	public void ResetLevel ()
+	{
+		level = 1;
+		RefreshLevel ();
 	}
 
 	public void ShowTopHint (TileType type)
@@ -197,6 +175,49 @@ public class Tile : MonoBehaviour
 	{
 		hint.SetActive (true);
 		hint.GetComponent<SpriteRenderer> ().sprite = TypeToHintSprite (type);
+	}
+
+	private void RefreshSprite ()
+	{
+		Sprite sprite;
+		switch (Type) {
+		case TileType.Black:
+			sprite = black;
+			break;
+		case TileType.Blue:
+			sprite = blue;
+			break;
+		case TileType.Gray:
+			sprite = gray;
+			break;
+		case TileType.Green:
+			sprite = green;
+			break;
+		case TileType.Orange:
+			sprite = orange;
+			break;
+		case TileType.Purple:
+			sprite = purple;
+			break;
+		case TileType.Red:
+			sprite = red;
+			break;
+		case TileType.White:
+			sprite = white;
+			break;
+		case TileType.Yellow:
+			sprite = yellow;
+			break;
+		default:
+			sprite = null;
+			break;
+		}
+		GetComponent<SpriteRenderer> ().sprite = sprite;
+	}
+
+	private void RefreshLevel ()
+	{
+		levelText.text = level > 1 ? level.ToString () : "";
 	}
 
 	private Sprite TypeToHintSprite (TileType type)

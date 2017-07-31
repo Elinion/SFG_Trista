@@ -6,17 +6,26 @@ public class Launcher : MonoBehaviour
 {
 	public int position;
 	public Animator animator;
+	public Animator bulletAnimator;
+	public float bulletAnimatorSpeed;
 	public List<int> targetTilesIndexes = new List<int> ();
 	public Sprite black;
+	public Sprite blackBullet;
 	public Sprite blue;
+	public Sprite blueBullet;
 	public Sprite green;
+	public Sprite greenBullet;
 	public Sprite orange;
+	public Sprite orangeBullet;
 	public Sprite purple;
+	public Sprite purpleBullet;
 	public Sprite red;
+	public Sprite redBullet;
 	public Sprite white;
+	public Sprite whiteBullet;
 	public Sprite yellow;
+	public Sprite yellowBullet;
 	public Sprite rainbomb;
-	public ParticleSystem mergeHint;
 
 	private Tile.TileType type;
 	private Score score;
@@ -26,47 +35,63 @@ public class Launcher : MonoBehaviour
 		set {
 			type = value;
 			Sprite sprite;
+			Sprite bulletSprite;
 			switch (value) {
 			case Tile.TileType.Black:
 				sprite = black;
+				bulletSprite = blackBullet;
 				break;
 			case Tile.TileType.Blue:
 				sprite = blue;
+				bulletSprite = blueBullet;
 				break;
 			case Tile.TileType.Green:
 				sprite = green;
+				bulletSprite = greenBullet;
 				break;
 			case Tile.TileType.Orange:
 				sprite = orange;
+				bulletSprite = orangeBullet;
 				break;
 			case Tile.TileType.Purple:
 				sprite = purple;
+				bulletSprite = purpleBullet;
 				break;
 			case Tile.TileType.Red:
 				sprite = red;
+				bulletSprite = redBullet;
 				break;
 			case Tile.TileType.White:
 				sprite = white;
+				bulletSprite = whiteBullet;
 				break;
 			case Tile.TileType.Yellow:
 				sprite = yellow;
+				bulletSprite = yellowBullet;
 				break;
 			case Tile.TileType.Rainbomb:
 				sprite = rainbomb;
+				bulletSprite = yellowBullet;
 				break;
 			default:
 				sprite = null;
+				bulletSprite = null;
 				break;
 			}
 			GetComponent<SpriteRenderer> ().sprite = sprite;
+			bulletAnimator.gameObject.GetComponent<SpriteRenderer> ().sprite = bulletSprite;
 		}
 	}
 
 	void Awake ()
 	{
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
-		mergeHint.Pause ();
 		ChangeType ();
+	}
+
+	void Start ()
+	{
+		bulletAnimator.speed = bulletAnimatorSpeed;
 	}
 
 	public void ChangeType ()
@@ -75,26 +100,19 @@ public class Launcher : MonoBehaviour
 		Type = newType;
 	}
 
-	public void HideHints ()
-	{
-		mergeHint.Stop ();
-	}
-
 	public void ShowHints ()
 	{
 		if (Type == Tile.TileType.Rainbomb) {
-			mergeHint.Stop ();
 			return;
 		}
 		for (int i = 0; i < targetTilesIndexes.Count; i++) {
 			int tileIndex = targetTilesIndexes [i];
-			Tile tile = TileManager.instance.tiles [tileIndex];
+			Tile tile = Board.instance.tiles [tileIndex];
 			if (tile.Type == Tile.TileType.None) {
 				continue;
 			}
-			Tile.TileType mergeResult = tile.MergeResult (Type);
+			Tile.TileType mergeResult = Tile.MergeResult (tile.Type, Type);
 			if (mergeResult != Tile.TileType.None) {
-				//mergeHint.Play ();
 				if (position < 3) {
 					tile.ShowTopHint (mergeResult);
 				} else if (position < 6) { 
@@ -105,8 +123,6 @@ public class Launcher : MonoBehaviour
 					tile.ShowLeftHint (mergeResult);
 				}
 
-			} else {
-				mergeHint.Stop ();
 			}
 			break;
 		}
@@ -114,61 +130,102 @@ public class Launcher : MonoBehaviour
 
 	public bool Trigger ()
 	{
-		bool didLaunch = LaunchOnFarthestTile ();
-		if (didLaunch) {
-			score.addTurn ();
+		int distance = DistanceFromValidTarget ();
+		if (distance != -1) {
+			ShowBulletAnimation (distance);
+			Tile target = Board.instance.tiles [targetTilesIndexes [distance]];
+			LaunchOnTile (target);
+			StartCoroutine (OnShootBulletAnimationFinished ((float)distance, target));
 			return true;
-		} else {
-			GameController.instance.GameOver ();
 		}
 		return false;
 	}
 
-	private bool LaunchOnFarthestTile ()
+	private int DistanceFromValidTarget ()
 	{
-		for (int i = 0; i < targetTilesIndexes.Count; i++) {
-			int targetTileIndex = targetTilesIndexes [i];
-			Tile targetTile = TileManager.instance.tiles [targetTileIndex];
-			if (targetTile.Type == Tile.TileType.None && i < targetTilesIndexes.Count - 1) {
-				continue;
-			}
-			bool launchSuccessful = LaunchOnTile (targetTile);
-			if (launchSuccessful) {
-				return true;
-			} else {
-				if (i == 0) {
-					return false;
-				} else {
-					Tile previousTile = TileManager.instance.tiles [targetTilesIndexes [i - 1]];
-					LaunchOnTile (previousTile);
-					return true;
-				}
+		int closestTileIndex = Board.instance.boardSize;
+		for (int i = targetTilesIndexes.Count - 1; i >= 0; i--) {
+			if (Board.instance.tiles [targetTilesIndexes [i]].Type != Tile.TileType.None) {
+				closestTileIndex = i;
 			}
 		}
-		return false;
-	}
-
-	private bool LaunchOnTile (Tile tile)
-	{
-		if (Type == Tile.TileType.Rainbomb || Type == tile.Type) {
-			GrowTile (tile);
-			return true;
-		}
-		if (tile.Type == Tile.TileType.None) {
-			tile.Type = Type;
-			return true;
+		if (closestTileIndex == Board.instance.boardSize) {
+			return closestTileIndex - 1;
 		} 
-		if (tile.MergeResult (Type) != Tile.TileType.None) {
-			tile.Merge (Type);
-			score.addMerge ();
-			return true;
+		Tile target = Board.instance.tiles [targetTilesIndexes [closestTileIndex]];
+		if (IsTargetValid (target.Type)) {
+			return closestTileIndex;
 		}
-		return false;
+		return closestTileIndex - 1;
 	}
 
 	private void GrowTile (Tile tile)
 	{
 		tile.Grow ();
-		score.addGrow ();
+		score.addGrowPoints ();
+	}
+
+	private bool IsTargetValid (Tile.TileType targetType)
+	{
+		return (
+		    Type == Tile.TileType.Rainbomb
+		    || Type == targetType
+		    || targetType == Tile.TileType.None
+		    || Tile.MergeResult (Type, targetType) != Tile.TileType.None
+		);
+	}
+
+	private void LaunchOnTile (Tile tile)
+	{
+		if (Type == Tile.TileType.Rainbomb || Type == tile.Type) {
+			GrowTile (tile);
+		} else if (tile.Type == Tile.TileType.None) {
+			SetTile (tile);
+		} else if (Tile.MergeResult (tile.Type, Type) != Tile.TileType.None) {
+			MergeWithTile (tile);
+		} 
+	}
+
+	private void MergeWithTile (Tile tile)
+	{
+		tile.Merge (Type);
+		score.addMergePoints ();
+	}
+
+	private void SetTile (Tile tile)
+	{
+		tile.Type = Type;
+		score.addLaunchPoints ();
+	}
+
+	private void ShowBulletAnimation (int targetDistance)
+	{
+		string shootTrigger = "";
+		switch (targetDistance) {
+		case 0:
+			shootTrigger = "Shoot1TileAway";
+			break;
+		case 1:
+			shootTrigger = "Shoot2TilesAway";
+			break;
+		case 2:
+			shootTrigger = "Shoot3TilesAway";
+			break;
+		default:
+			break;
+		}
+		bulletAnimator.SetTrigger (shootTrigger);
+	}
+
+	IEnumerator OnShootBulletAnimationFinished (float distance, Tile tile)
+	{
+		float time = distance / bulletAnimator.speed;
+		yield return new WaitForSeconds (time);
+		yield return new WaitUntil (() => 
+			bulletAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > time
+		);
+		bulletAnimator.SetTrigger ("Idle");
+		tile.Refresh ();
+		LauncherManager.instance.ShiftLaunchers ();
 	}
 }

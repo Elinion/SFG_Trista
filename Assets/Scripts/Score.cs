@@ -8,10 +8,10 @@ public class Score : MonoBehaviour
 	public Text pointsText;
 
 	private int points = 0;
-	public int pointsPerTurn = 10;
-	public int pointsPerGrow = 3;
-	public int pointsPerMerge = 9;
-	public int pointsPerTriple = 27;
+	public int launchPoints;
+	public int growPoints;
+	public int mergePoints;
+	public int popPoints;
 	public int extraPointsPerLevel = 10;
 
 	public int Points {
@@ -23,23 +23,23 @@ public class Score : MonoBehaviour
 		pointsText.text = points.ToString ();
 	}
 
-	public void addMerge ()
+	public void addMergePoints ()
 	{
-		points += pointsPerMerge;
+		points += mergePoints;
 	}
 
-	public void addGrow ()
+	public void addGrowPoints ()
 	{
-		points += pointsPerGrow;
+		points += growPoints;
 	}
 
 	public void addTriple (int totalLevel = 0)
 	{
-		points += pointsPerTriple + totalLevel * extraPointsPerLevel;
+		points += popPoints + totalLevel * extraPointsPerLevel;
 	}
 
-	public void addTurn ()
+	public void addLaunchPoints ()
 	{
-		points += pointsPerTurn;
+		points += launchPoints;
 	}
 }
