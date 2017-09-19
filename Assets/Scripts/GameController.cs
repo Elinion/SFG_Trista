@@ -28,7 +28,6 @@ public class GameController : MonoBehaviour
 	public void Restart ()
 	{
 		board.UnsubscribeFromEvents ();
-		LauncherManager.instance.UnsubscribeFromEvents ();
 		SceneManager.LoadSceneAsync (SceneManager.GetActiveScene ().name);
 	}
 }

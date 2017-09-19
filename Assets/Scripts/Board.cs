@@ -13,6 +13,7 @@ public class Board : MonoBehaviour
 
 	private Score score;
 	private List<int> tilesToRefresh = new List<int> ();
+	private Goal goal;
 
 	void Awake ()
 	{
@@ -21,9 +22,8 @@ public class Board : MonoBehaviour
 
 	void Start ()
 	{
-		Debug.Log ("start");
-
 		InitBoard ();
+		goal = GameObject.FindGameObjectWithTag (Tags.Goal).GetComponent<Goal> ();
 		SubscribeEvents ();
 	}
 
@@ -38,6 +38,18 @@ public class Board : MonoBehaviour
 	{
 		Launcher.OnLaunchEnd -= HideHints;
 		Launcher.OnLaunchEnd -= RemoveTriples;
+	}
+
+	private void CheckPattern ()
+	{
+		for (int i = 0; i < 9; i++) {
+			if (goal.targetColors [i] != Tile.TileType.None
+			    && goal.targetColors [i] != tiles [i].Type) {
+				return;
+			}
+		}
+
+		Debug.Log ("YOU DID IT BRO");
 	}
 
 	private void InitBoard ()
@@ -109,6 +121,7 @@ public class Board : MonoBehaviour
 	private void SubscribeEvents ()
 	{
 		Launcher.OnLaunchEnd += HideHints;
+		Launcher.OnLaunchEnd += CheckPattern;
 		Launcher.OnLaunchEnd += RemoveTriples;
 	}
 }

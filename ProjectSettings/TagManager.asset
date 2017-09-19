@@ -10,6 +10,7 @@ TagManager:
   - Fire
   - LauncherManager
   - Board
+  - Goal
   layers:
   - Default
   - TransparentFX

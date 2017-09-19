@@ -30,11 +30,6 @@ public class LauncherManager : MonoBehaviour
 		}
 	}
 
-	public void UnsubscribeFromEvents ()
-	{
-		board.OnRemoveTriplesEnd -= ShiftLaunchers;
-	}
-
 	private void ChangeLaunchersTargets ()
 	{
 		List<int> toShift = launchers [0].targetTilesIndexes;
