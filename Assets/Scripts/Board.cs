@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-	public static Board instance = null;
 	public List<Tile> tiles = new List<Tile> ();
 	public int boardSize = 3;
 
 	public delegate void OnRemoveTriplesEndAction ();
 
-	public static event OnRemoveTriplesEndAction OnRemoveTriplesEnd;
+	public event OnRemoveTriplesEndAction OnRemoveTriplesEnd;
 
 	private Score score;
 	private List<int> tilesToRefresh = new List<int> ();
 
 	void Awake ()
 	{
-		ImplementSingleton ();
-		FetchReferences ();
+		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
 	}
 
 	void Start ()
 	{
+		Debug.Log ("start");
+
 		InitBoard ();
 		SubscribeEvents ();
 	}
@@ -34,18 +34,10 @@ public class Board : MonoBehaviour
 		}
 	}
 
-	private void FetchReferences ()
+	public void UnsubscribeFromEvents ()
 	{
-		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
-	}
-
-	private void ImplementSingleton ()
-	{
-		if (instance == null) {
-			instance = this;
-		} else {
-			Destroy (gameObject);
-		}
+		Launcher.OnLaunchEnd -= HideHints;
+		Launcher.OnLaunchEnd -= RemoveTriples;
 	}
 
 	private void InitBoard ()

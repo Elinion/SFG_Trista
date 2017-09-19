@@ -9,6 +9,7 @@ TagManager:
   - Score
   - Fire
   - LauncherManager
+  - Board
   layers:
   - Default
   - TransparentFX

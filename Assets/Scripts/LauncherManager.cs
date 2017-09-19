@@ -9,23 +9,30 @@ public class LauncherManager : MonoBehaviour
 	public List<Launcher> launchers = new List<Launcher> ();
 	public List<Transform> launcherHolders = new List<Transform> ();
 	public float launcherAnimatorSpeed;
+	private Board board;
 
 	public delegate void OnShiftEndAction ();
 
-	public static event OnShiftEndAction OnShiftEnd;
+	public event OnShiftEndAction OnShiftEnd;
 
 	void Awake ()
 	{
 		ImplementSingleton ();
+		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
 	}
 
 	void Start ()
 	{
 		UpdateHints ();
-		Board.OnRemoveTriplesEnd += ShiftLaunchers;
+		board.OnRemoveTriplesEnd += ShiftLaunchers;
 		foreach (Launcher launcher in launchers) {
 			launcher.GetComponent<Animator> ().speed = launcherAnimatorSpeed;
 		}
+	}
+
+	public void UnsubscribeFromEvents ()
+	{
+		board.OnRemoveTriplesEnd -= ShiftLaunchers;
 	}
 
 	private void ChangeLaunchersTargets ()

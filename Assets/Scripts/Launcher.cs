@@ -29,6 +29,7 @@ public class Launcher : MonoBehaviour
 
 	private Tile.TileType type;
 	private Score score;
+	private Board board;
 
 	public delegate void OnLaunchAction ();
 
@@ -90,6 +91,7 @@ public class Launcher : MonoBehaviour
 	void Awake ()
 	{
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
+		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
 		ChangeType ();
 	}
 
@@ -111,7 +113,7 @@ public class Launcher : MonoBehaviour
 		}
 		for (int i = 0; i < targetTilesIndexes.Count; i++) {
 			int tileIndex = targetTilesIndexes [i];
-			Tile tile = Board.instance.tiles [tileIndex];
+			Tile tile = board.tiles [tileIndex];
 			if (tile.Type == Tile.TileType.None) {
 				continue;
 			}
@@ -138,25 +140,25 @@ public class Launcher : MonoBehaviour
 		if (distance != -1) {
 			ClickManager.instance.enabled = false;
 			ShowBulletAnimation (distance);
-			Tile target = Board.instance.tiles [targetTilesIndexes [distance]];
+			Tile target = board.tiles [targetTilesIndexes [distance]];
 			LaunchOnTile (target);
-			LauncherManager.OnShiftEnd += SetRandomType;
+			LauncherManager.instance.OnShiftEnd += SetRandomType;
 			StartCoroutine (OnShootBulletAnimationFinished ((float)distance, target));
 		}
 	}
 
 	private int DistanceFromValidTarget ()
 	{
-		int closestTileIndex = Board.instance.boardSize;
+		int closestTileIndex = board.boardSize;
 		for (int i = targetTilesIndexes.Count - 1; i >= 0; i--) {
-			if (Board.instance.tiles [targetTilesIndexes [i]].Type != Tile.TileType.None) {
+			if (board.tiles [targetTilesIndexes [i]].Type != Tile.TileType.None) {
 				closestTileIndex = i;
 			}
 		}
-		if (closestTileIndex == Board.instance.boardSize) {
+		if (closestTileIndex == board.boardSize) {
 			return closestTileIndex - 1;
 		} 
-		Tile target = Board.instance.tiles [targetTilesIndexes [closestTileIndex]];
+		Tile target = board.tiles [targetTilesIndexes [closestTileIndex]];
 		if (IsTargetValid (target.Type)) {
 			return closestTileIndex;
 		}
@@ -199,7 +201,7 @@ public class Launcher : MonoBehaviour
 	private void SetRandomType ()
 	{
 		ChangeType ();
-		LauncherManager.OnShiftEnd -= SetRandomType;
+		LauncherManager.instance.OnShiftEnd -= SetRandomType;
 	}
 
 	private void SetTile (Tile tile)
@@ -229,10 +231,10 @@ public class Launcher : MonoBehaviour
 
 	IEnumerator OnShootBulletAnimationFinished (float distance, Tile tile)
 	{
-		float time = distance / bulletAnimator.speed;
-		yield return new WaitForSeconds (time);
+		float waitTime = distance / bulletAnimator.speed;
+		yield return new WaitForSeconds (waitTime);
 		yield return new WaitUntil (() => 
-			bulletAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > time
+			bulletAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime > waitTime
 		);
 		bulletAnimator.SetTrigger ("Idle");
 		tile.Refresh ();

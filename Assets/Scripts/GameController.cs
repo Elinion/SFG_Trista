@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
 {
 	public static GameController instance = null;
 
+	private Board board;
+
 	void Awake ()
 	{
 		if (instance == null) {
@@ -14,6 +16,8 @@ public class GameController : MonoBehaviour
 		} else {
 			Destroy (gameObject);
 		}
+
+		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
 	}
 
 	public void GameOver ()
@@ -23,6 +27,8 @@ public class GameController : MonoBehaviour
 
 	public void Restart ()
 	{
-		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+		board.UnsubscribeFromEvents ();
+		LauncherManager.instance.UnsubscribeFromEvents ();
+		SceneManager.LoadSceneAsync (SceneManager.GetActiveScene ().name);
 	}
 }

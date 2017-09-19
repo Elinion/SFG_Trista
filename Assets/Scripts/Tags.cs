@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tags : MonoBehaviour
 {
+	public const string Board = "Board";
 	public const string GameController = "GameController";
 	public const string Launcher = "Launcher";
 	public const string Score = "Score";
