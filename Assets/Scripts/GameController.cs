@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
 	public static GameController instance = null;
+	public GameObject levelClearUI;
 
 	private Board board;
 
@@ -17,7 +18,13 @@ public class GameController : MonoBehaviour
 			Destroy (gameObject);
 		}
 
+		levelClearUI.SetActive (false);
 		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
+	}
+
+	public void ClearLevel ()
+	{
+		levelClearUI.SetActive (true);
 	}
 
 	public void GameOver ()

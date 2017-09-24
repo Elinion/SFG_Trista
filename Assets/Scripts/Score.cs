@@ -7,7 +7,7 @@ public class Score : MonoBehaviour
 {
 	public Text pointsText;
 
-	private int points = 0;
+	private int points = 100;
 	public int launchPoints;
 	public int growPoints;
 	public int mergePoints;

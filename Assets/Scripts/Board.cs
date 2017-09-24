@@ -49,7 +49,7 @@ public class Board : MonoBehaviour
 			}
 		}
 
-		Debug.Log ("YOU DID IT BRO");
+		GameController.instance.ClearLevel ();
 	}
 
 	private void InitBoard ()
