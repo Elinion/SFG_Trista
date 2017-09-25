@@ -52,6 +52,13 @@ public class Board : MonoBehaviour
 		GameController.instance.ClearLevel ();
 	}
 
+	private void CheckGameOver ()
+	{
+		if (!LauncherManager.instance.CanUseAtLeastOnLauncher ()) {
+			GameController.instance.GameOver ();
+		}
+	}
+
 	private void InitBoard ()
 	{
 		int numberOfTiles = boardSize * boardSize;
@@ -123,5 +130,6 @@ public class Board : MonoBehaviour
 		Launcher.OnLaunchEnd += HideHints;
 		Launcher.OnLaunchEnd += CheckPattern;
 		Launcher.OnLaunchEnd += RemoveTriples;
+		Launcher.OnLaunchEnd += CheckGameOver;
 	}
 }

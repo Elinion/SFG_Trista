@@ -148,7 +148,7 @@ public class Launcher : MonoBehaviour
 		}
 	}
 
-	private int DistanceFromValidTarget ()
+	public int DistanceFromValidTarget ()
 	{
 		int closestTileIndex = board.boardSize;
 		for (int i = targetTilesIndexes.Count - 1; i >= 0; i--) {

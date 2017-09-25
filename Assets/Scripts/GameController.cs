@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
 {
 	public static GameController instance = null;
 	public GameObject levelClearUI;
+	public GameObject gameOverUI;
 
 	private Board board;
 
@@ -29,7 +30,7 @@ public class GameController : MonoBehaviour
 
 	public void GameOver ()
 	{
-		Debug.Log ("Game Over");
+		gameOverUI.SetActive (true);
 	}
 
 	public void Restart ()

@@ -68,6 +68,16 @@ public class LauncherManager : MonoBehaviour
 		}
 	}
 
+	public bool CanUseAtLeastOnLauncher ()
+	{
+		foreach (Launcher launcher in launchers) {
+			if (launcher.DistanceFromValidTarget () != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void ShiftLaunchers ()
 	{
 		MoveLaunchers ();
