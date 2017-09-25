@@ -30,6 +30,7 @@ public class Launcher : MonoBehaviour
 	private Tile.TileType type;
 	private Score score;
 	private Board board;
+	private LevelColors levelColors;
 
 	public delegate void OnLaunchAction ();
 
@@ -92,18 +93,18 @@ public class Launcher : MonoBehaviour
 	{
 		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
 		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
-		ChangeType ();
+		levelColors = GameObject.FindGameObjectWithTag (Tags.LevelController).GetComponent<LevelColors> ();
 	}
 
 	void Start ()
 	{
+		ChangeType ();
 		bulletAnimator.speed = bulletAnimatorSpeed;
 	}
 
 	public void ChangeType ()
 	{
-		Tile.TileType newType = (Tile.TileType)Random.Range (0, 9);
-		Type = newType;
+		Type = levelColors.getRandomColor ();
 	}
 
 	public void ShowHints ()

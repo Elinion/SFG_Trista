@@ -10,7 +10,7 @@ TagManager:
   - Fire
   - LauncherManager
   - Board
-  - Goal
+  - LevelController
   layers:
   - Default
   - TransparentFX

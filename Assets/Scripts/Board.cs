@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
 	void Start ()
 	{
 		InitBoard ();
-		goal = GameObject.FindGameObjectWithTag (Tags.Goal).GetComponent<Goal> ();
+		goal = GameObject.FindGameObjectWithTag (Tags.LevelController).GetComponent<Goal> ();
 		SubscribeEvents ();
 	}
 
