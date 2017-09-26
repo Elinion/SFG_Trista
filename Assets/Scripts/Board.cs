@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
 
 	private Score score;
 	private List<int> tilesToRefresh = new List<int> ();
-	private Goal goal;
+	private LevelColors level;
 
 	void Awake ()
 	{
@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
 	void Start ()
 	{
 		InitBoard ();
-		goal = GameObject.FindGameObjectWithTag (Tags.LevelController).GetComponent<Goal> ();
+		level = GameObject.FindGameObjectWithTag (Tags.LevelController).GetComponent<LevelColors> ();
 		SubscribeEvents ();
 	}
 
@@ -43,8 +43,8 @@ public class Board : MonoBehaviour
 	private void CheckPattern ()
 	{
 		for (int i = 0; i < 9; i++) {
-			if (goal.targetColors [i] != Tile.TileType.None
-			    && goal.targetColors [i] != tiles [i].Type) {
+			if (level.CurrentLevel.pattern [i] != Tile.TileType.None
+			    && level.CurrentLevel.pattern [i] != tiles [i].Type) {
 				return;
 			}
 		}

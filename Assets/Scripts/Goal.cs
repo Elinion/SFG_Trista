@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Goal : MonoBehaviour
 {
-	public List<Tile.TileType> targetColors = new List<Tile.TileType> ();
 	public List<Image> targetTilesUI = new List<Image> ();
 	public Sprite black;
 	public Sprite blue;
@@ -19,8 +18,9 @@ public class Goal : MonoBehaviour
 
 	void Start ()
 	{
+		LevelColors.LevelParams level = GetComponent<LevelColors> ().Level;
 		for (int i = 0; i < 9; i++) {
-			targetTilesUI [i].sprite = TypeToSprite (targetColors [i]);
+			targetTilesUI [i].sprite = TypeToSprite (level.pattern [i]);
 		}
 	}
 

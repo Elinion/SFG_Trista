@@ -33,6 +33,18 @@ public class GameController : MonoBehaviour
 		gameOverUI.SetActive (true);
 	}
 
+	public void GoToLevelMenu ()
+	{
+		SceneManager.LoadSceneAsync ("levelMenu");
+	}
+
+	public void GoToNextLevel ()
+	{
+		GlobalLevelData.selectedLevelId++;
+		GlobalLevelData.selectedLevelId %= GlobalLevelData.numberOfLevels;
+		Restart ();
+	}
+
 	public void Restart ()
 	{
 		board.UnsubscribeFromEvents ();
