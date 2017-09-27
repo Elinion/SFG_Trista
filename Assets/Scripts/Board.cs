@@ -6,6 +6,7 @@ public class Board : MonoBehaviour
 {
 	public List<Tile> tiles = new List<Tile> ();
 	public int boardSize = 3;
+	public bool survivalMode = false;
 
 	public delegate void OnRemoveTriplesEndAction ();
 
@@ -128,7 +129,9 @@ public class Board : MonoBehaviour
 	private void SubscribeEvents ()
 	{
 		Launcher.OnLaunchEnd += HideHints;
-		Launcher.OnLaunchEnd += CheckPattern;
+		if (!survivalMode) {
+			Launcher.OnLaunchEnd += CheckPattern;
+		}
 		Launcher.OnLaunchEnd += RemoveTriples;
 		Launcher.OnLaunchEnd += CheckGameOver;
 	}

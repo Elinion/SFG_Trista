@@ -38,6 +38,11 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadSceneAsync ("levelMenu");
 	}
 
+	public void GoToMainMenu ()
+	{
+		SceneManager.LoadSceneAsync ("mainMenu");
+	}
+
 	public void GoToNextLevel ()
 	{
 		GlobalLevelData.selectedLevelId++;

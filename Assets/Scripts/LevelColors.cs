@@ -37,9 +37,16 @@ public class LevelColors : MonoBehaviour
 
 	private void loadCurrentLevelParams ()
 	{
-		foreach (LevelParams level in levels) {
-			if (level.levelId == GlobalLevelData.selectedLevelId) {
-				currentLevel = level;
+		// Survival mode
+		if (GlobalLevelData.selectedLevelId == -1) {
+			currentLevel = levels [0];
+		} 
+		// Levels with a pattern to match
+		else {
+			foreach (LevelParams level in levels) {
+				if (level.levelId == GlobalLevelData.selectedLevelId) {
+					currentLevel = level;
+				}
 			}
 		}
 	}
