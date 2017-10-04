@@ -26,6 +26,7 @@ public class Launcher : MonoBehaviour
 	public Sprite yellow;
 	public Sprite yellowBullet;
 	public Sprite rainbomb;
+    public Sprite rainbombBullet;
 
 	private Tile.TileType type;
 	private Score score;
@@ -34,7 +35,7 @@ public class Launcher : MonoBehaviour
 
 	public delegate void OnLaunchAction ();
 
-	public static event OnLaunchAction OnLaunchEnd;
+	public event OnLaunchAction OnLaunchEnd;
 
 	public Tile.TileType Type {
 		get { return type; }
@@ -77,7 +78,7 @@ public class Launcher : MonoBehaviour
 				break;
 			case Tile.TileType.Rainbomb:
 				sprite = rainbomb;
-				bulletSprite = yellowBullet;
+				bulletSprite = rainbombBullet;
 				break;
 			default:
 				sprite = null;

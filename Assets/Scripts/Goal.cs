@@ -15,6 +15,7 @@ public class Goal : MonoBehaviour
 	public Sprite red;
 	public Sprite white;
 	public Sprite yellow;
+    public Sprite transparent;
 
 	void Start ()
 	{
@@ -46,6 +47,6 @@ public class Goal : MonoBehaviour
 		case Tile.TileType.Gray:
 			return gray;
 		}
-		return gray;
+        return transparent;
 	}
 }

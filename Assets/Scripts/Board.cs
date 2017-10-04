@@ -4,132 +4,177 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-	public List<Tile> tiles = new List<Tile> ();
-	public int boardSize = 3;
+    public List<Tile> tiles = new List<Tile>();
+    public int boardSize = 3;
+    public bool survivalMode = false;
 
-	public delegate void OnRemoveTriplesEndAction ();
+    public delegate void OnRemoveTriplesEndAction();
 
-	public event OnRemoveTriplesEndAction OnRemoveTriplesEnd;
+    public event OnRemoveTriplesEndAction OnRemoveTriplesEnd;
 
-	private Score score;
-	private List<int> tilesToRefresh = new List<int> ();
-	private LevelColors level;
+    private Score score;
+    private List<int> tilesToRefresh = new List<int>();
+    private LevelColors level;
+    private GameObject[] launchers;
+    private List<int> tilesToRemove = new List<int>();
 
-	void Awake ()
-	{
-		score = GameObject.FindGameObjectWithTag (Tags.Score).GetComponent<Score> ();
-	}
+    void Awake()
+    {
+        score = GameObject.FindGameObjectWithTag(Tags.Score).GetComponent<Score>();
+        launchers = GameObject.FindGameObjectsWithTag(Tags.Launcher);
+    }
 
-	void Start ()
-	{
-		InitBoard ();
-		level = GameObject.FindGameObjectWithTag (Tags.LevelController).GetComponent<LevelColors> ();
-		SubscribeEvents ();
-	}
+    void Start()
+    {
+        InitBoard();
+        level = GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelColors>();
+        SubscribeEvents();
+    }
 
-	public void HideHints ()
-	{
-		foreach (Tile tile in tiles) {
-			tile.HideHints ();
-		}
-	}
+    public void HideHints()
+    {
+        foreach (Tile tile in tiles)
+        {
+            tile.HideHints();
+        }
+    }
 
-	public void UnsubscribeFromEvents ()
-	{
-		Launcher.OnLaunchEnd -= HideHints;
-		Launcher.OnLaunchEnd -= RemoveTriples;
-	}
+    private void AddTileToRemove(int index)
+    {
+        if (!tilesToRemove.Contains(index))
+        {
+            tilesToRemove.Add(index);
+        }
+    }
 
-	private void CheckPattern ()
-	{
-		for (int i = 0; i < 9; i++) {
-			if (level.CurrentLevel.pattern [i] != Tile.TileType.None
-			    && level.CurrentLevel.pattern [i] != tiles [i].Type) {
-				return;
-			}
-		}
+    private void CheckPattern()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            if (level.CurrentLevel.pattern[i] != Tile.TileType.None
+                && level.CurrentLevel.pattern[i] != tiles[i].Type)
+            {
+                return;
+            }
+        }
 
-		GameController.instance.ClearLevel ();
-	}
+        GameController.instance.ClearLevel();
+    }
 
-	private void CheckGameOver ()
-	{
-		if (!LauncherManager.instance.CanUseAtLeastOnLauncher ()) {
-			GameController.instance.GameOver ();
-		}
-	}
+    private void CheckGameOver()
+    {
+        if (!LauncherManager.instance.CanUseAtLeastOnLauncher())
+        {
+            GameController.instance.GameOver();
+        }
+    }
 
-	private void InitBoard ()
-	{
-		int numberOfTiles = boardSize * boardSize;
-		for (int i = 0; i < numberOfTiles; i++) {
-			tiles [i].Type = Tile.TileType.None;
-		}
-		if (numberOfTiles % 2 == 1) {
-			tiles [numberOfTiles / 2].Type = Tile.TileType.Gray;
-		}
-	}
+    private void MarkTilesThatShouldBeRemoved()
+    {
+        tilesToRemove.Clear();
+        RemoveTripleIfIdentical(0, 1, 2);
+        RemoveTripleIfIdentical(3, 4, 5);
+        RemoveTripleIfIdentical(6, 7, 8);
+        RemoveTripleIfIdentical(0, 3, 6);
+        RemoveTripleIfIdentical(1, 4, 7);
+        RemoveTripleIfIdentical(2, 5, 8);
+        RemoveTripleIfIdentical(0, 4, 8);
+        RemoveTripleIfIdentical(2, 4, 6);
+    }
 
-	private void RemoveTile (int index)
-	{
-		tiles [index].Type = Tile.TileType.None;
-		tiles [index].GetComponent<Animator> ().SetTrigger ("ShrinkAway");
-		if (!tilesToRefresh.Contains (index)) {
-			tilesToRefresh.Add (index);
-		}
-	}
+    private void InitBoard()
+    {
+        int numberOfTiles = boardSize * boardSize;
+        for (int i = 0; i < numberOfTiles; i++)
+        {
+            tiles[i].Type = Tile.TileType.None;
+        }
+        if (numberOfTiles % 2 == 1)
+        {
+            tiles[numberOfTiles / 2].Type = Tile.TileType.Gray;
+        }
+    }
 
-	private void RemoveTripleIfIdentical (int first, int second, int third)
-	{
-		if (
-			tiles [first].Type == tiles [second].Type
-			&& tiles [first].Type == tiles [third].Type
-			&& tiles [first].Type != Tile.TileType.None
-			&& tiles [first].Type != Tile.TileType.Gray) {
-			int totalTileLevel = 0;
-			RemoveTile (first);
-			RemoveTile (second);
-			RemoveTile (third);
-			score.addTriple (totalTileLevel);
-		}
-	}
+    private void RemoveTile(int index)
+    {
+        tiles[index].Type = Tile.TileType.None;
+        tiles[index].GetComponent<Animator>().SetTrigger("ShrinkAway");
+        if (!tilesToRefresh.Contains(index))
+        {
+            tilesToRefresh.Add(index);
+        }
+    }
 
-	IEnumerator OnRemoveTriplesAnimationFinished (float time)
-	{
-		yield return new WaitForSeconds (time);
-		foreach (int index in tilesToRefresh) {
-			tiles [index].GetComponent<Animator> ().SetTrigger ("Idle");
-			tiles [index].ResetLevel ();
-			tiles [index].Refresh ();
-		}
-		tilesToRefresh.Clear ();
-		OnRemoveTriplesEnd ();
-	}
 
-	private void RemoveTriples ()
-	{
-		RemoveTripleIfIdentical (0, 1, 2);
-		RemoveTripleIfIdentical (3, 4, 5);
-		RemoveTripleIfIdentical (6, 7, 8);
-		RemoveTripleIfIdentical (0, 3, 6);
-		RemoveTripleIfIdentical (1, 4, 7);
-		RemoveTripleIfIdentical (2, 5, 8);
-		RemoveTripleIfIdentical (0, 4, 8);
-		RemoveTripleIfIdentical (2, 4, 6);
+    private void RemoveTripleIfIdentical(int first, int second, int third)
+    {
+        if (
+            tiles[first].Type == tiles[second].Type
+            && tiles[first].Type == tiles[third].Type
+            && tiles[first].Type != Tile.TileType.None
+            && tiles[first].Type != Tile.TileType.Gray)
+        {
+            int totalTileLevel = 0;
+            AddTileToRemove(first);
+            AddTileToRemove(second);
+            AddTileToRemove(third);
+            score.addTriple(totalTileLevel);
+        }
+    }
 
-		if (tilesToRefresh.Count > 0) {
-			float animationDuration = 1f / tiles [0].GetComponent<Animator> ().speed;
-			StartCoroutine (OnRemoveTriplesAnimationFinished (animationDuration));
-		} else {
-			OnRemoveTriplesEnd ();
-		}
-	}
+    IEnumerator OnRemoveTriplesAnimationFinished(float time)
+    {
+        yield return new WaitForSeconds(time);
+        foreach (int index in tilesToRefresh)
+        {
+            tiles[index].GetComponent<Animator>().SetTrigger("Idle");
+            tiles[index].ResetLevel();
+            tiles[index].Refresh();
+        }
+        tilesToRefresh.Clear();
+        OnRemoveTriplesEnd();
+    }
 
-	private void SubscribeEvents ()
-	{
-		Launcher.OnLaunchEnd += HideHints;
-		Launcher.OnLaunchEnd += CheckPattern;
-		Launcher.OnLaunchEnd += RemoveTriples;
-		Launcher.OnLaunchEnd += CheckGameOver;
-	}
+    private void RemoveAlignedTiles()
+    {
+        MarkTilesThatShouldBeRemoved();
+        RemoveMarkedTiles();
+        WaitForRemoveAnimationsAndResetRemovedTiles();
+    }
+
+    private void RemoveMarkedTiles()
+    {
+        foreach (int index in tilesToRemove)
+        {
+            RemoveTile(index);
+        }
+    }
+
+    private void SubscribeEvents()
+    {
+        foreach (GameObject launcherGO in launchers)
+        {
+            Launcher launcher = launcherGO.GetComponent<Launcher>();
+            launcher.OnLaunchEnd += HideHints;
+            if (!survivalMode)
+            {
+                launcher.OnLaunchEnd += CheckPattern;
+            }
+            launcher.OnLaunchEnd += RemoveAlignedTiles;
+            launcher.OnLaunchEnd += CheckGameOver;
+        }
+    }
+
+    private void WaitForRemoveAnimationsAndResetRemovedTiles()
+    {
+        if (tilesToRefresh.Count > 0)
+        {
+            float animationDuration = 1f / tiles[0].GetComponent<Animator>().speed;
+            StartCoroutine(OnRemoveTriplesAnimationFinished(animationDuration));
+        }
+        else
+        {
+            OnRemoveTriplesEnd();
+        }
+    }
 }

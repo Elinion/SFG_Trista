@@ -9,8 +9,6 @@ public class GameController : MonoBehaviour
 	public GameObject levelClearUI;
 	public GameObject gameOverUI;
 
-	private Board board;
-
 	void Awake ()
 	{
 		if (instance == null) {
@@ -20,7 +18,6 @@ public class GameController : MonoBehaviour
 		}
 
 		levelClearUI.SetActive (false);
-		board = GameObject.FindGameObjectWithTag (Tags.Board).GetComponent<Board> ();
 	}
 
 	public void ClearLevel ()
@@ -38,6 +35,11 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadSceneAsync ("levelMenu");
 	}
 
+	public void GoToMainMenu ()
+	{
+		SceneManager.LoadSceneAsync ("mainMenu");
+	}
+
 	public void GoToNextLevel ()
 	{
 		GlobalLevelData.selectedLevelId++;
@@ -47,7 +49,6 @@ public class GameController : MonoBehaviour
 
 	public void Restart ()
 	{
-		board.UnsubscribeFromEvents ();
 		SceneManager.LoadSceneAsync (SceneManager.GetActiveScene ().name);
 	}
 }

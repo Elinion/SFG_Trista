@@ -11,4 +11,9 @@ public class LevelPicker : MonoBehaviour
 		GlobalLevelData.selectedLevelId = levelId;
 		SceneManager.LoadSceneAsync ("game");
 	}
+
+	public void GoToMainMenu ()
+	{
+		SceneManager.LoadSceneAsync ("mainMenu");
+	}
 }
