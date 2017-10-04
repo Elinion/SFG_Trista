@@ -47,18 +47,26 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void CheckPattern()
+    private void CheckBoardState() {
+        if (!survivalMode && IsLevelComplete()) { 
+            GameController.instance.ClearLevel();
+        } else {
+            RemoveAlignedTiles();
+            CheckGameOver();
+        }
+    }
+
+    private bool IsLevelComplete()
     {
         for (int i = 0; i < 9; i++)
         {
             if (level.CurrentLevel.pattern[i] != Tile.TileType.None
                 && level.CurrentLevel.pattern[i] != tiles[i].Type)
             {
-                return;
+                return false;
             }
         }
-
-        GameController.instance.ClearLevel();
+        return true;
     }
 
     private void CheckGameOver()
@@ -67,7 +75,20 @@ public class Board : MonoBehaviour
         {
             GameController.instance.GameOver();
         }
-    }
+	}
+
+	private void InitBoard()
+	{
+		int numberOfTiles = boardSize * boardSize;
+		for (int i = 0; i < numberOfTiles; i++)
+		{
+			tiles[i].Type = Tile.TileType.None;
+		}
+		if (numberOfTiles % 2 == 1)
+		{
+			tiles[numberOfTiles / 2].Type = Tile.TileType.Gray;
+		}
+	}
 
     private void MarkTilesThatShouldBeRemoved()
     {
@@ -80,19 +101,6 @@ public class Board : MonoBehaviour
         RemoveTripleIfIdentical(2, 5, 8);
         RemoveTripleIfIdentical(0, 4, 8);
         RemoveTripleIfIdentical(2, 4, 6);
-    }
-
-    private void InitBoard()
-    {
-        int numberOfTiles = boardSize * boardSize;
-        for (int i = 0; i < numberOfTiles; i++)
-        {
-            tiles[i].Type = Tile.TileType.None;
-        }
-        if (numberOfTiles % 2 == 1)
-        {
-            tiles[numberOfTiles / 2].Type = Tile.TileType.Gray;
-        }
     }
 
     private void RemoveTile(int index)
@@ -124,15 +132,10 @@ public class Board : MonoBehaviour
 
     IEnumerator OnRemoveTriplesAnimationFinished(float time)
     {
-        yield return new WaitForSeconds(time);
-        foreach (int index in tilesToRefresh)
-        {
-            tiles[index].GetComponent<Animator>().SetTrigger("Idle");
-            tiles[index].ResetLevel();
-            tiles[index].Refresh();
-        }
-        tilesToRefresh.Clear();
-        OnRemoveTriplesEnd();
+		yield return new WaitForSeconds(time);
+        CheckGameOver();
+		ResetRemovedTiles();
+		OnRemoveTriplesEnd();
     }
 
     private void RemoveAlignedTiles()
@@ -150,18 +153,23 @@ public class Board : MonoBehaviour
         }
     }
 
+    private void ResetRemovedTiles() {
+		foreach (int index in tilesToRefresh)
+		{
+			tiles[index].GetComponent<Animator>().SetTrigger("Idle");
+			tiles[index].ResetLevel();
+			tiles[index].Refresh();
+		}
+		tilesToRefresh.Clear();
+    }
+
     private void SubscribeEvents()
     {
         foreach (GameObject launcherGO in launchers)
         {
             Launcher launcher = launcherGO.GetComponent<Launcher>();
             launcher.OnLaunchEnd += HideHints;
-            if (!survivalMode)
-            {
-                launcher.OnLaunchEnd += CheckPattern;
-            }
-            launcher.OnLaunchEnd += RemoveAlignedTiles;
-            launcher.OnLaunchEnd += CheckGameOver;
+            launcher.OnLaunchEnd += CheckBoardState;
         }
     }
 
