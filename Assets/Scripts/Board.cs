@@ -49,7 +49,7 @@ public class Board : MonoBehaviour
 
     private void CheckBoardState() {
         if (!survivalMode && IsLevelComplete()) { 
-            GameController.instance.ClearLevel();
+            RemoveTilesThatAreNotInThePattern();
         } else {
             RemoveAlignedTiles();
             CheckGameOver();
@@ -111,6 +111,27 @@ public class Board : MonoBehaviour
         {
             tilesToRefresh.Add(index);
         }
+    }
+
+    private void RemoveTilesThatAreNotInThePattern() {
+        tilesToRemove.Clear();
+		for (int i = 0; i < 9; i++)
+		{
+			if (level.CurrentLevel.pattern[i] != Tile.TileType.None
+				&& level.CurrentLevel.pattern[i] != tiles[i].Type)
+			{
+				AddTileToRemove(i);
+			}
+		}
+        RemoveMarkedTiles();
+		float animationDuration = 1f / tiles[0].GetComponent<Animator>().speed;
+		StartCoroutine(CompleteLevel(animationDuration));
+    }
+
+	IEnumerator CompleteLevel(float time)
+	{
+		yield return new WaitForSeconds(time);
+        GameController.instance.ClearLevel();
     }
 
 
