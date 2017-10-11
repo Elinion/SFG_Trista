@@ -139,6 +139,14 @@ public class Launcher : MonoBehaviour
 	public void Trigger ()
 	{
 		int distance = DistanceFromValidTarget ();
+
+		// If it is a joker launcher (multicolor), there must be at least one target tile to merge with
+		// otherwise the player can't play this launcher this turn
+
+		int farthestTileIndex = board.boardSize - 1;
+		if (distance == farthestTileIndex && Type == Tile.TileType.Rainbomb) {
+			return;
+		}
 		if (distance != -1) {
 			ClickManager.instance.enabled = false;
 			ShowBulletAnimation (distance);
