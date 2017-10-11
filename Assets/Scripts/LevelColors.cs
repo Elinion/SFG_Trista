@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelColors : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class LevelColors : MonoBehaviour
 	}
 
 	public List<LevelParams> levels = new List<LevelParams> ();
+	public Text levelNameUI;
 
 	private LevelParams currentLevel;
 
@@ -28,6 +30,7 @@ public class LevelColors : MonoBehaviour
 	void Awake ()
 	{
 		loadCurrentLevelParams ();
+		levelNameUI.text = currentLevel.levelName;
 	}
 
 	public Tile.TileType getRandomColor ()

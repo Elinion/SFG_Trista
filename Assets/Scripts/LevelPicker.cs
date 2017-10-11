@@ -9,6 +9,7 @@ public class LevelPicker : MonoBehaviour
 	public void OpenLevel (int levelId)
 	{
 		GlobalLevelData.selectedLevelId = levelId;
+		Debug.Log (GlobalLevelData.selectedLevelId);
 		SceneManager.LoadSceneAsync ("game");
 	}
 

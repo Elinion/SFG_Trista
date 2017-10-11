@@ -41,6 +41,7 @@ public class Board : MonoBehaviour
 	private void AddTileToRemove (int index)
 	{
 		if (!tilesToRemove.Contains (index)) {
+			tiles [index].GetComponent<Animator> ().SetTrigger ("ShrinkAway");
 			tilesToRemove.Add (index);
 		}
 	}
@@ -112,7 +113,6 @@ public class Board : MonoBehaviour
 			if (tiles [i].Type != Tile.TileType.None) {
 				if (level.CurrentLevel.pattern [i] == tiles [i].Type) {
 					tiles [i].ResetLevel ();
-					tiles [i].GetComponent<Animator> ().speed = 1f;
 					tiles [i].GetComponent<Animator> ().SetTrigger ("Flip");
 				} else {
 					tiles [i].GetComponent<Animator> ().SetTrigger ("ShrinkAway");
@@ -120,7 +120,7 @@ public class Board : MonoBehaviour
 				}
 			}
 		}
-		float animationDuration = 2f;
+		float animationDuration = 1f;
 		StartCoroutine (CompleteLevel (animationDuration));
 	}
 
