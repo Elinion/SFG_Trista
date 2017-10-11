@@ -1621,6 +1621,25 @@ Prefab:
       propertyPath: defaultColor
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 212322176057718534, guid: 91d18686676db46318cae0ab33b99a40,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1f39b07622bb54d9cbe09be97754b5ee,
+        type: 3}
+    - target: {fileID: 212322176057718534, guid: 91d18686676db46318cae0ab33b99a40,
+        type: 2}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410832611987852, guid: 91d18686676db46318cae0ab33b99a40, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410832611987852, guid: 91d18686676db46318cae0ab33b99a40, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91d18686676db46318cae0ab33b99a40, type: 2}
   m_IsPrefabParent: 0

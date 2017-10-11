@@ -140,13 +140,6 @@ public class Launcher : MonoBehaviour
 	{
 		int distance = DistanceFromValidTarget ();
 
-		// If it is a joker launcher (multicolor), there must be at least one target tile to merge with
-		// otherwise the player can't play this launcher this turn
-
-		int farthestTileIndex = board.boardSize - 1;
-		if (distance == farthestTileIndex && Type == Tile.TileType.Rainbomb) {
-			return;
-		}
 		if (distance != -1) {
 			ClickManager.instance.enabled = false;
 			ShowBulletAnimation (distance);
@@ -160,14 +153,21 @@ public class Launcher : MonoBehaviour
 	public int DistanceFromValidTarget ()
 	{
 		int closestTileIndex = board.boardSize;
+		bool areAllTilesEmpty = true;
 		for (int i = targetTilesIndexes.Count - 1; i >= 0; i--) {
 			if (board.tiles [targetTilesIndexes [i]].Type != Tile.TileType.None) {
 				closestTileIndex = i;
+				areAllTilesEmpty = false;
 			}
+		}
+		// A player may not shoot a multicolor launcher on an empty tile
+		if(areAllTilesEmpty && Type == Tile.TileType.Rainbomb) {
+			return -1;
 		}
 		if (closestTileIndex == board.boardSize) {
 			return closestTileIndex - 1;
 		} 
+
 		Tile target = board.tiles [targetTilesIndexes [closestTileIndex]];
 		if (IsTargetValid (target.Type)) {
 			return closestTileIndex;
