@@ -10,8 +10,8 @@ public class LevelColors : MonoBehaviour
 	{
 		public int levelId;
 		public string levelName = "";
-		public List<Tile.TileType> pattern = new List<Tile.TileType> ();
-		public List<Tile.TileType> colors = new List<Tile.TileType> ();
+        public List<ColorManager.Colors> pattern = new List<ColorManager.Colors> ();
+        public List<ColorManager.Colors> colors = new List<ColorManager.Colors> ();
 	}
 
 	public List<LevelParams> levels = new List<LevelParams> ();
@@ -31,11 +31,6 @@ public class LevelColors : MonoBehaviour
 	{
 		loadCurrentLevelParams ();
 		levelNameUI.text = currentLevel.levelName;
-	}
-
-	public Tile.TileType getRandomColor ()
-	{
-		return currentLevel.colors [Random.Range (0, currentLevel.colors.Count)];
 	}
 
 	private void loadCurrentLevelParams ()

@@ -4,13 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Launcher
   - Tile
   - Score
   - Fire
-  - LauncherManager
   - Board
   - LevelController
+  - DataController
+  - Tube
   layers:
   - Default
   - TransparentFX

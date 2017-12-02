@@ -168,8 +168,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1197775812421392}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.1, y: 1.1, z: 0}
   m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
   m_Children:
   - {fileID: 4573247182870614}
@@ -275,30 +275,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animatorSpeed: 4
-  defaultColor: 0
-  black: {fileID: 21300000, guid: 778c2abf2d57943199f770f3238a309f, type: 3}
-  blackTriangle: {fileID: 21300000, guid: cf8f82ae742524776b4431fc7d5b379e, type: 3}
-  blue: {fileID: 21300000, guid: 65b264dd582e441ecb4d40c0e7c28843, type: 3}
-  blueTriangle: {fileID: 21300000, guid: 1e2d7be44a95f4b14aeafa842bb337dc, type: 3}
-  gray: {fileID: 21300000, guid: 1f39b07622bb54d9cbe09be97754b5ee, type: 3}
-  grayTriangle: {fileID: 21300000, guid: 6d903e26a52e84ca985adb212b07b3ab, type: 3}
-  green: {fileID: 21300000, guid: 2e8bfbb952c8147d7b0fd55aabf62883, type: 3}
-  greenTriangle: {fileID: 21300000, guid: db7348347e2554b8aab0518a83ae8d6e, type: 3}
-  orange: {fileID: 21300000, guid: 34ac6bb8caf6a461eaf04c569e8e44cf, type: 3}
-  orangeTriangle: {fileID: 21300000, guid: 6a43a4e3f44d9478e8f17b1b369d7157, type: 3}
-  purple: {fileID: 21300000, guid: 760d2effa29544f3b839805ea26a2baa, type: 3}
-  purpleTriangle: {fileID: 21300000, guid: faaf3706fc50447bfa205af96f339f00, type: 3}
-  red: {fileID: 21300000, guid: 549f64ef022ed432da314f8648f68e73, type: 3}
-  redTriangle: {fileID: 21300000, guid: 9e5ee499d41164a3bbafdeb57c6a7ca5, type: 3}
-  white: {fileID: 21300000, guid: 9c680b346beb74ae1b561c0bf00cbd06, type: 3}
-  whiteTriangle: {fileID: 21300000, guid: 7147d38f44553448d9301e98556abad4, type: 3}
-  yellow: {fileID: 21300000, guid: 242e9aa0ca9c445c1bc1cd9c22aeed66, type: 3}
-  yellowTriangle: {fileID: 21300000, guid: 6a3282edc92234d09a8d661240635a61, type: 3}
+  levelText: {fileID: 102807256680488552}
   topHint: {fileID: 1580955030298654}
-  rightHint: {fileID: 1629685558132046}
   bottomHint: {fileID: 1383403115958872}
   leftHint: {fileID: 1334812337370744}
-  levelText: {fileID: 102807256680488552}
+  rightHint: {fileID: 1629685558132046}
 --- !u!212 &212322176057718534
 SpriteRenderer:
   m_ObjectHideFlags: 1

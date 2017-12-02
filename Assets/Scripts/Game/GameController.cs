@@ -6,33 +6,37 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
 	public static GameController instance = null;
-	public GameObject levelClearUI;
-	public GameObject gameOverUI;
+
+    private LevelData level;
+    public LevelData Level {
+        get { return level; }
+    }
 
 	void Awake ()
 	{
 		if (instance == null) {
 			instance = this;
+            DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy (gameObject);
 		}
 
-		levelClearUI.SetActive (false);
+		//levelClearUI.SetActive (false);
 	}
 
 	public void ClearLevel ()
 	{
-		levelClearUI.SetActive (true);
+		//levelClearUI.SetActive (true);
 	}
 
 	public void GameOver ()
 	{
-		gameOverUI.SetActive (true);
+		//gameOverUI.SetActive (true);
 	}
 
 	public void GoToLevelMenu ()
 	{
-		SceneManager.LoadSceneAsync ("levelMenu");
+		SceneManager.LoadSceneAsync ("levelSelection");
 	}
 
 	public void GoToMainMenu ()
@@ -44,10 +48,15 @@ public class GameController : MonoBehaviour
 	{
 		GlobalLevelData.selectedLevelId++;
 		GlobalLevelData.selectedLevelId %= GlobalLevelData.numberOfLevels;
-		Restart ();
+		ReloadScene ();
 	}
 
-	public void Restart ()
+    public void PlayLevel(LevelData level) {
+        this.level = level;
+        SceneManager.LoadSceneAsync("game");
+    }
+
+    public void ReloadScene ()
 	{
 		SceneManager.LoadSceneAsync (SceneManager.GetActiveScene ().name);
 	}

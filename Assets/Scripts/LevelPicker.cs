@@ -5,8 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelPicker : MonoBehaviour
 {
-	
-	public void OpenLevel (int levelId)
+		public void OpenLevel (int levelId)
 	{
 		GlobalLevelData.selectedLevelId = levelId;
 		Debug.Log (GlobalLevelData.selectedLevelId);
