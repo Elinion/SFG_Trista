@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public enum TilePosition {
+        
+    }
+
     public enum HintLocation
     {
         Top, Bottom, Left, Right
@@ -70,6 +74,10 @@ public class Tile : MonoBehaviour
         rightHint.SetActive(false);
         bottomHint.SetActive(false);
         leftHint.SetActive(false);
+    }
+
+    public void PlaySuccessAnimation() {
+        GetComponent<Animator>().SetTrigger("Flip");
     }
 
     public void Remove()

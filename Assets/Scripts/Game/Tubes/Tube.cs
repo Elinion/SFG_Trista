@@ -16,13 +16,11 @@ public class Tube : MonoBehaviour
 
     public Direction direction;
     public ShiftType shiftType;
-    public Tile firstTarget;
-    public Tile secondTarget;
-    public Tile thirdTarget;
     public Animator tubeAnimator;
     public Animator bulletAnimator;
     public float bulletAnimatorSpeed;
     public SpriteRenderer tubeRenderer;
+    public List<Tile> targetTiles = new List<Tile>();
 
     private ColorManager.Colors color;
     public ColorManager.Colors Color
@@ -37,31 +35,25 @@ public class Tube : MonoBehaviour
     }
 
     private Dictionary<Direction, Tile.HintLocation> hintLocations = new Dictionary<Direction, Tile.HintLocation>();
+    private Dictionary<int, string> shootFromDistanceAnimations = new Dictionary<int, string>();
     private ColorManager.Colors nextColor;
 
     public bool CanPlay()
     {
-        return DistanceFromTargetTile() > 0;
+        return DistanceFromTargetTile() != -1;
     }
 
     public int DistanceFromTargetTile()
     {
-        if (firstTarget.Color != ColorManager.Colors.None)
+        for (int i = 0; i < targetTiles.Count; i++)
         {
-            return CanMergeOrGrow(firstTarget) ? 1 : 0;
+            if (targetTiles[i].Color != ColorManager.Colors.None)
+            {
+                return CanMergeOrGrow(targetTiles[i]) ? i : i - 1;
+            }
         }
-        else if (secondTarget.Color != ColorManager.Colors.None)
-        {
-            return CanMergeOrGrow(secondTarget) ? 2 : 1;
-        }
-        else if (thirdTarget.Color != ColorManager.Colors.None)
-        {
-            return CanMergeOrGrow(thirdTarget) ? 3 : 2;
-        }
-        else
-        {
-            return Color == ColorManager.Colors.Multicolor ? 0 : 3;
-        }
+
+        return Color == ColorManager.Colors.Multicolor ? -1 : targetTiles.Count - 1;
     }
 
     public void Play()
@@ -88,17 +80,13 @@ public class Tube : MonoBehaviour
         if (Color == ColorManager.Colors.Multicolor)
             return;
 
-        if (firstTarget.Color != ColorManager.Colors.None)
+        for (int i = 0; i < targetTiles.Count; i++)
         {
-            ShowHintForTarget(firstTarget);
-        }
-        else if (secondTarget.Color != ColorManager.Colors.None)
-        {
-            ShowHintForTarget(secondTarget);
-        }
-        else if (thirdTarget.Color != ColorManager.Colors.None)
-        {
-            ShowHintForTarget(thirdTarget);
+            if (targetTiles[i].Color != ColorManager.Colors.None)
+            {
+                ShowHintForTarget(targetTiles[i]);
+                return;
+            }
         }
     }
 
@@ -110,6 +98,7 @@ public class Tube : MonoBehaviour
     private void Awake()
     {
         SetHintLocations();
+        SetShootFromDistanceAnimations();
     }
 
     private void Start()
@@ -131,24 +120,22 @@ public class Tube : MonoBehaviour
         hintLocations[Direction.Right] = Tile.HintLocation.Left;
     }
 
+    private void SetShootFromDistanceAnimations()
+    {
+        shootFromDistanceAnimations[0] = "Shoot1TileAway";
+        shootFromDistanceAnimations[1] = "Shoot2TilesAway";
+        shootFromDistanceAnimations[2] = "Shoot3TilesAway";
+    }
+
     private void PlayBulletAnimation()
     {
-        string shootTrigger = "";
-        switch (DistanceFromTargetTile())
+        int distance = DistanceFromTargetTile();
+        if (!shootFromDistanceAnimations.ContainsKey(distance))
         {
-            case 1:
-                shootTrigger = "Shoot1TileAway";
-                break;
-            case 2:
-                shootTrigger = "Shoot2TilesAway";
-                break;
-            case 3:
-                shootTrigger = "Shoot3TilesAway";
-                break;
-            default:
-                break;
+            Debug.Log("Tube::PlayBulletAnimation: no shoot animation found for distance " + distance + ".");
+            return;
         }
-        bulletAnimator.SetTrigger(shootTrigger);
+        bulletAnimator.SetTrigger(shootFromDistanceAnimations[distance]);
     }
 
     private void ShowHintForTarget(Tile target)

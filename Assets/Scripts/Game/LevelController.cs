@@ -8,19 +8,25 @@ public class LevelController : MonoBehaviour
     public TubeController tubeController;
     public PlayerControls playerControls;
     public Board board;
+    public GameObject levelCompletedUI;
 
-    private GameController gameController;
     private List<Tile> tilesBeingRemoved;
     private Tube lastTubePlayed;
     private int colorSequenceIndex = 0;
     private ColorManager.Colors[] defaultColors = new ColorManager.Colors[10];
 
-    public void OnShiftEnd() {
+    public void OnShiftEnd()
+    {
         StartTurn();
     }
 
-    public void GoToLevelMenu() {
+    public void GoToLevelMenu()
+    {
         GameController.instance.GoToLevelMenu();
+    }
+
+    public void GoToNextLevel() {
+        GameController.instance.GoToNextLevel();
     }
 
     public void OnTubePlayed()
@@ -39,13 +45,15 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    public void Restart() {
+    public void Restart()
+    {
         GameController.instance.ReloadScene();
     }
 
     public void TileHasBeenRemoved(Tile tile)
     {
-        if (tilesBeingRemoved.Contains(tile))
+        if (tilesBeingRemoved != null
+            && tilesBeingRemoved.Contains(tile))
         {
             tilesBeingRemoved.Remove(tile);
             if (tilesBeingRemoved.Count == 0)
@@ -63,13 +71,13 @@ public class LevelController : MonoBehaviour
 
     private void Awake()
     {
-        gameController = GameObject.FindGameObjectWithTag(Tags.GameController).GetComponent<GameController>();
         SetDefaultColors();
     }
 
     private void Start()
     {
         tubeController.tubes.ForEach(tube => tube.Color = GetRandomLevelColor());
+        board.InitBoard(GameController.instance.Level);
         StartTurn();
     }
 
@@ -87,7 +95,7 @@ public class LevelController : MonoBehaviour
 
     private void CheckLevelProgress()
     {
-        if (board.IsLevelCompleted(gameController.Level))
+        if (board.IsLevelCompleted(GameController.instance.Level))
         {
             GameCompleted();
         }
@@ -101,8 +109,8 @@ public class LevelController : MonoBehaviour
 
     private void ChangeTubeColor()
     {
-        colorSequenceIndex = ++colorSequenceIndex % gameController.Level.tubeSequence.Length;
-        ColorGeneratorData colorGen = gameController.Level.tubeSequence[colorSequenceIndex];
+        colorSequenceIndex = ++colorSequenceIndex % GameController.instance.Level.tubeSequence.Length;
+        ColorGeneratorData colorGen = GameController.instance.Level.tubeSequence[colorSequenceIndex];
         ColorManager.Colors nextColor;
         if (colorGen.generateRandomColor)
         {
@@ -117,7 +125,14 @@ public class LevelController : MonoBehaviour
 
     private void GameCompleted()
     {
-        Debug.Log("Game completed");
+        board.HideTileHints();
+        board.PlayLevelCompletedAnimation(GameController.instance.Level);
+        StartCoroutine(ShowLevelCompletedUI(1f));
+    }
+
+    private IEnumerator ShowLevelCompletedUI(float waitForSeconds) {
+        yield return new WaitForSeconds(waitForSeconds);
+        levelCompletedUI.SetActive(true);
     }
 
     private void GameOver()
@@ -127,9 +142,10 @@ public class LevelController : MonoBehaviour
 
     private ColorManager.Colors GetRandomLevelColor()
     {
-        return gameController.Level.possibleColors.Length == 0 ?
-                                      defaultColors[Random.Range(0, defaultColors.Length)] :
-                                      gameController.Level.possibleColors[Random.Range(0, gameController.Level.possibleColors.Length)];
+        LevelData level = GameController.instance.Level;
+        return level.possibleColors.Length == 0 ?
+                    defaultColors[Random.Range(0, defaultColors.Length)] :
+                    level.possibleColors[Random.Range(0, level.possibleColors.Length)];
     }
 
     private bool RemoveAlignedTiles()

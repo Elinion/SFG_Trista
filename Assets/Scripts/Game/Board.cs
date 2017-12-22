@@ -14,11 +14,13 @@ public class Board : MonoBehaviour
         private readonly List<Tile> allTiles = new List<Tile>();
         public List<Tile> AllTiles
         {
-            get {
-                if(allTiles.Count == 0) {
+            get
+            {
+                if (allTiles.Count == 0)
+                {
                     SetUpLines();
                 }
-                return allTiles; 
+                return allTiles;
             }
         }
 
@@ -30,19 +32,10 @@ public class Board : MonoBehaviour
         }
     }
 
-    public Tile topLeftTile;
-    public Tile topMiddleTile;
-    public Tile topRightTile;
-    public Tile middleLeftTile;
-    public Tile middleCenterTile;
-    public Tile middleRightTile;
-    public Tile bottomLeftTile;
-    public Tile bottomMiddleTile;
-    public Tile bottomRightTile;
     public List<Line> lines = new List<Line>();
+    public List<Tile> tiles = new List<Tile>();
 
-    private GameController gameController;
-    private readonly List<Tile> allTiles = new List<Tile>();
+    private int boardSize;
 
     public List<Tile> GetAlignedTiles()
     {
@@ -62,31 +55,48 @@ public class Board : MonoBehaviour
 
     public void HideTileHints()
     {
-        allTiles.ForEach(tile => tile.HideHints());
+        tiles.ForEach(tile => tile.HideHints());
+    }
+
+    public void InitBoard(LevelData level)
+    {
+        if (tiles.Count != level.tiles.Length)
+        {
+            Debug.Log("Board::InitBoard: board size and level size don't match.");
+            return;
+        }
+        boardSize = (int)Mathf.Sqrt((float)tiles.Count);
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            tiles[i].Color = level.tiles[i].defaultColor;
+        }
     }
 
     public bool IsLevelCompleted(LevelData level)
     {
-        return DoesTileMatch(topLeftTile, level.topLeftTile)
-            && DoesTileMatch(topMiddleTile, level.topMiddleTile)
-            && DoesTileMatch(topRightTile, level.topRightTile)
-            && DoesTileMatch(middleLeftTile, level.middleLeftTile)
-            && DoesTileMatch(middleCenterTile, level.middleCenterTile)
-            && DoesTileMatch(middleRightTile, level.middleRightTile)
-            && DoesTileMatch(bottomLeftTile, level.bottomLeftTile)
-            && DoesTileMatch(bottomMiddleTile, level.bottomMiddleTile)
-            && DoesTileMatch(bottomRightTile, level.bottomRightTile);
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (!DoesTileMatch(tiles[i], level.tiles[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    private void Awake()
+    public void PlayLevelCompletedAnimation(LevelData level)
     {
-        gameController = GameObject.FindGameObjectWithTag(Tags.GameController).GetComponent<GameController>();
-        SetTiles();
-    }
-
-    private void Start()
-    {
-        InitBoard();
+        for (int i = 0; i < tiles.Count; i++) {
+            Tile currentTile = tiles[i];
+            if(level.tiles[i].isRequired
+               && DoesTileMatch(currentTile, level.tiles[i])) {
+                currentTile.PlaySuccessAnimation();
+            } else {
+                currentTile.Remove();
+            }
+        }
     }
 
     private bool DoesTileMatch(Tile tile, TileData tileData)
@@ -109,55 +119,4 @@ public class Board : MonoBehaviour
             }
         });
     }
-
-    private void InitBoard()
-    {
-        LevelData level = gameController.Level;
-        topLeftTile.Color = level.topLeftTile.defaultColor;
-        topMiddleTile.Color = level.topMiddleTile.defaultColor;
-        topRightTile.Color = level.topRightTile.defaultColor;
-        middleLeftTile.Color = level.middleLeftTile.defaultColor;
-        middleCenterTile.Color = level.middleCenterTile.defaultColor;
-        middleRightTile.Color = level.middleRightTile.defaultColor;
-        bottomLeftTile.Color = level.bottomLeftTile.defaultColor;
-        bottomMiddleTile.Color = level.bottomMiddleTile.defaultColor;
-        bottomRightTile.Color = level.bottomRightTile.defaultColor;
-    }
-
-    private void SetTiles()
-    {
-        allTiles.Add(topLeftTile);
-        allTiles.Add(topMiddleTile);
-        allTiles.Add(topRightTile);
-        allTiles.Add(middleLeftTile);
-        allTiles.Add(middleCenterTile);
-        allTiles.Add(middleRightTile);
-        allTiles.Add(bottomLeftTile);
-        allTiles.Add(bottomMiddleTile);
-        allTiles.Add(bottomRightTile);
-    }
-
-
-    //private void HandlePatternCompletion()
-    //{
-    //    tilesToRemove.Clear();
-    //    for (int i = 0; i < GetNumberOfTiles(); i++)
-    //    {
-    //        if (tiles[i].Color == ColorManager.Colors.None)
-    //            continue;
-
-    //        if (level.CurrentLevel.pattern[i] == tiles[i].Color)
-    //        {
-    //            tiles[i].ResetLevel();
-    //            tiles[i].GetComponent<Animator>().SetTrigger("Flip");
-    //        }
-    //        else
-    //        {
-    //            tiles[i].GetComponent<Animator>().SetTrigger("ShrinkAway");
-    //            AddTileToRemove(i);
-    //        }
-    //    }
-    //    float animationDuration = 1f;
-    //    StartCoroutine(CompleteLevel(animationDuration));
-    //}
 }
