@@ -7,7 +7,12 @@ public class TubeController : MonoBehaviour
     public List<Tube> tubes = new List<Tube> ();
 	public float launcherAnimatorSpeed;
 
-    public void ShiftTubes ()
+    private void Start()
+    {
+        tubes.ForEach(tube => tube.tubeAnimator.speed = launcherAnimatorSpeed);
+    }
+
+    public void shiftTubes ()
 	{
         for (int i = 0; i < tubes.Count; i++) {
             int previousTube = i == 0 ? tubes.Count - 1 : i - 1;
@@ -15,8 +20,13 @@ public class TubeController : MonoBehaviour
         }
     }
 
-    private void Start()
+    public bool hasPlayableTube()
     {
-        tubes.ForEach(tube => tube.tubeAnimator.speed = launcherAnimatorSpeed);
+        return tubes.Exists(tube => tube.CanPlay());
+    }
+
+    public void showTubeHints()
+    {
+        tubes.ForEach(tube => tube.ShowHints());
     }
 }

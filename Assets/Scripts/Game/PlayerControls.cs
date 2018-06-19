@@ -41,7 +41,7 @@ public class PlayerControls : MonoBehaviour
 	{
         foreach (GameObject tube in tubes) {
 			if (tube == clickedObject) {
-                levelController.PlayTube(tube.transform.parent.GetComponent<Tube>());
+                levelController.playTube(tube.transform.parent.GetComponent<Tube>());
 			}
 		}
 	}

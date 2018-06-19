@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
         public Tile thirdTile;
 
         private readonly List<Tile> allTiles = new List<Tile>();
+
         public List<Tile> AllTiles
         {
             get
@@ -20,6 +21,7 @@ public class Board : MonoBehaviour
                 {
                     SetUpLines();
                 }
+
                 return allTiles;
             }
         }
@@ -31,7 +33,7 @@ public class Board : MonoBehaviour
             allTiles.Add(thirdTile);
         }
     }
-
+    
     public List<Line> lines = new List<Line>();
     public List<Tile> tiles = new List<Tile>();
 
@@ -65,7 +67,8 @@ public class Board : MonoBehaviour
             Debug.Log("Board::InitBoard: board size and level size don't match.");
             return;
         }
-        boardSize = (int)Mathf.Sqrt((float)tiles.Count);
+
+        boardSize = (int) Mathf.Sqrt((float) tiles.Count);
 
         for (int i = 0; i < tiles.Count; i++)
         {
@@ -86,14 +89,37 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    public void PlayLevelCompletedAnimation(LevelData level)
+    private bool DoesTileStriclyMatch(Tile tile, TileData tileData)
     {
-        for (int i = 0; i < tiles.Count; i++) {
+        return tileData.color == tile.Color
+               && tileData.minimumValue <= tile.Level;
+    }
+
+    public bool IsLevelPerfectlyCompleted(LevelData level)
+    {
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (!DoesTileStriclyMatch(tiles[i], level.tiles[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void PlayLevelCompleteAnimation(LevelData level)
+    {
+        for (int i = 0; i < tiles.Count; i++)
+        {
             Tile currentTile = tiles[i];
-            if(level.tiles[i].isRequired
-               && DoesTileMatch(currentTile, level.tiles[i])) {
+            if (level.tiles[i].isRequired
+                && DoesTileMatch(currentTile, level.tiles[i]))
+            {
                 currentTile.PlaySuccessAnimation();
-            } else {
+            }
+            else
+            {
                 currentTile.Remove();
             }
         }
@@ -104,8 +130,9 @@ public class Board : MonoBehaviour
         if (tileData.isRequired)
         {
             return tileData.color == tile.Color
-                           && tileData.minimumValue <= tile.Level;
+                   && tileData.minimumValue <= tile.Level;
         }
+
         return true;
     }
 

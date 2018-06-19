@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public enum TilePosition {
-        
+    public enum TilePosition
+    {
     }
 
     public enum HintLocation
     {
-        Top, Bottom, Left, Right
+        Top,
+        Bottom,
+        Left,
+        Right
     }
 
     public float animatorSpeed;
@@ -24,6 +27,7 @@ public class Tile : MonoBehaviour
     private LevelController levelController;
 
     private ColorManager.Colors color = ColorManager.Colors.None;
+
     public ColorManager.Colors Color
     {
         get { return color; }
@@ -35,6 +39,7 @@ public class Tile : MonoBehaviour
     }
 
     private int level = 1;
+
     public int Level
     {
         get { return level; }
@@ -43,6 +48,11 @@ public class Tile : MonoBehaviour
             level = value;
             levelText.text = level > 1 ? level.ToString() : "";
         }
+    }
+
+    public static bool isValid(TileData expected, Tile actual)
+    {
+        return expected.color == actual.Color && expected.minimumValue <= actual.Level;
     }
 
     public void AddColor(ColorManager.Colors otherColor)
@@ -65,7 +75,7 @@ public class Tile : MonoBehaviour
     public void DoneRemoving()
     {
         Reset();
-        levelController.TileHasBeenRemoved(this);
+        levelController.tileHasBeenRemoved(this);
     }
 
     public void HideHints()
@@ -76,7 +86,8 @@ public class Tile : MonoBehaviour
         leftHint.SetActive(false);
     }
 
-    public void PlaySuccessAnimation() {
+    public void PlaySuccessAnimation()
+    {
         GetComponent<Animator>().SetTrigger("Flip");
     }
 
@@ -95,7 +106,8 @@ public class Tile : MonoBehaviour
     public void ShowHint(HintLocation hintLocation, ColorManager.Colors color)
     {
         hints[hintLocation].SetActive(true);
-        hints[hintLocation].GetComponent<SpriteRenderer>().sprite = ColorManager.instance.GetColorAssets(color).triangle;
+        hints[hintLocation].GetComponent<SpriteRenderer>().sprite =
+            ColorManager.instance.GetColorAssets(color).triangle;
     }
 
     private void Awake()
@@ -136,5 +148,4 @@ public class Tile : MonoBehaviour
         hints.Add(HintLocation.Left, leftHint);
         hints.Add(HintLocation.Right, rightHint);
     }
-
 }

@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class PageManager : MonoBehaviour
 {
     public Text pageName;
-    public int currentLevelPage;
-    public int currentWorld;
+    public int currentLevelPage = 0;
+    public int currentWorld = 0;
     public LevelThumbnail[] levels = new LevelThumbnail[10];
 
     private DataController dataController;
@@ -51,4 +51,5 @@ public class PageManager : MonoBehaviour
     private LevelGroupData[] LevelGroups() {
         return dataController.Worlds[currentWorld].levelGroups;
     }
+    
 }

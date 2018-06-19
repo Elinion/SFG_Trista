@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
 
     public void MergeWithTarget(int distance) {
         tube.targetTiles[distance].AddColor(tube.Color);
-        levelController.OnTubePlayed();
+        levelController.onTubePlayed();
     }
 
     private void Awake()
