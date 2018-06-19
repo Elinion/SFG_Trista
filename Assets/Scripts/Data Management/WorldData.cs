@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class GameData {
-    public WorldData[] worlds;
+public class WorldData {
+    public string worldName;
+    public LevelGroupData[] levelGroups;
 }

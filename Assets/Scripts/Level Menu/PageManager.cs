@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class PageManager : MonoBehaviour
 {
-
     public Text pageName;
-    public int currentLevelPage = 0;
+    public int currentLevelPage;
+    public int currentWorld;
     public LevelThumbnail[] levels = new LevelThumbnail[10];
 
     private DataController dataController;
@@ -20,7 +20,7 @@ public class PageManager : MonoBehaviour
 
     public void GoToNextPage()
     {
-        currentLevelPage = ++currentLevelPage % dataController.LevelGroups.Length;
+        currentLevelPage = ++currentLevelPage % LevelGroups().Length;
         CreateCurrentLevelPage();
     }
 
@@ -29,14 +29,14 @@ public class PageManager : MonoBehaviour
         currentLevelPage--;
         if (currentLevelPage < 0)
         {
-            currentLevelPage = dataController.LevelGroups.Length - 1;
+            currentLevelPage = LevelGroups().Length - 1;
         }
         CreateCurrentLevelPage();
     }
 
     private void CreateCurrentLevelPage()
     {
-        LevelGroupData page = dataController.LevelGroups[currentLevelPage];
+        LevelGroupData page = LevelGroups()[currentLevelPage];
         pageName.text = page.levelGroupName;
 
         if(page.levels.Length != 10) {
@@ -46,5 +46,9 @@ public class PageManager : MonoBehaviour
         for (int i = 0; i < page.levels.Length; i++) {
             levels[i].SetLevelData(page.levels[i]);
         }
+    }
+
+    private LevelGroupData[] LevelGroups() {
+        return dataController.Worlds[currentWorld].levelGroups;
     }
 }

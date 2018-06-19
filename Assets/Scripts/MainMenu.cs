@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
 
 	public void GoToLevels ()
 	{
-		SceneManager.LoadSceneAsync ("levelMenu");
+		SceneManager.LoadSceneAsync ("levelSelection");
 	}
 
 	public void GoToSurvivalMode ()

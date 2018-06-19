@@ -791,7 +791,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 683428834}
-  - component: {fileID: 683428835}
   - component: {fileID: 683428836}
   m_Layer: 5
   m_Name: Logo
@@ -826,17 +825,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -165}
   m_SizeDelta: {x: 671.4, y: 452.1}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &683428835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 683428833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e960481092efe4bffb3e54bca27e82f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!111 &683428836
 Animation:
   m_ObjectHideFlags: 0

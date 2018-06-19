@@ -13,7 +13,7 @@ public class GameDataEditor : EditorWindow {
     [MenuItem ("Window/Game Data Editor")]
     static void Init() {
         GameDataEditor window = (GameDataEditor)EditorWindow.GetWindow(typeof(GameDataEditor));
-        window.Show(); 
+        window.Show();
     }
 
     private void OnGUI()
@@ -22,7 +22,7 @@ public class GameDataEditor : EditorWindow {
             SerializedObject serializedObject = new SerializedObject(this);
             SerializedProperty serializedProperty = serializedObject.FindProperty("gameData");
 
-            EditorGUILayout.PropertyField(serializedProperty, true);
+            EditorGUILayout.PropertyField(serializedProperty, true, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             serializedObject.ApplyModifiedProperties();
 
