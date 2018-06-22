@@ -29,8 +29,8 @@ public class Tube : MonoBehaviour
         set
         {
             color = value;
-            tubeRenderer.sprite = ColorManager.instance.GetColorAssets(color).tube;
-            bulletAnimator.gameObject.GetComponent<SpriteRenderer>().sprite = ColorManager.instance.GetColorAssets(color).ball;
+            tubeRenderer.sprite = ColorManager.instance.getColorAssets(color).tube;
+            bulletAnimator.gameObject.GetComponent<SpriteRenderer>().sprite = ColorManager.instance.getColorAssets(color).ball;
         }
     }
 
@@ -109,7 +109,7 @@ public class Tube : MonoBehaviour
     private bool CanMergeOrGrow(Tile target)
     {
         return target.Color == Color
-                     || ColorManager.MergeColors(Color, target.Color) != ColorManager.Colors.None;
+                     || ColorManager.getMergeResult(Color, target.Color) != ColorManager.Colors.None;
     }
 
     private void SetHintLocations()
@@ -140,7 +140,7 @@ public class Tube : MonoBehaviour
 
     private void ShowHintForTarget(Tile target)
     {
-        ColorManager.Colors mergeResultWithTarget = ColorManager.MergeColors(Color, target.Color);
+        ColorManager.Colors mergeResultWithTarget = ColorManager.getMergeResult(Color, target.Color);
         if (mergeResultWithTarget != ColorManager.Colors.None)
         {
             target.ShowHint(hintLocations[direction], mergeResultWithTarget);

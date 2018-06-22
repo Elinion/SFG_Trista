@@ -7,14 +7,9 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance = null;
 
-    private LevelData level;
-    public LevelData Level
-    {
-        
-        get { return level; }
-    }
+    public LevelData level { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
         if (instance == null)
         {
@@ -28,12 +23,7 @@ public class GameController : MonoBehaviour
 
         //levelClearUI.SetActive (false);
     }
-
-    public void GameOver()
-    {
-        //gameOverUI.SetActive (true);
-    }
-
+    
     public void GoToLevelMenu()
     {
         SceneManager.LoadSceneAsync("levelSelection");
@@ -48,16 +38,16 @@ public class GameController : MonoBehaviour
     {
         GlobalLevelData.selectedLevelId++;
         GlobalLevelData.selectedLevelId %= GlobalLevelData.numberOfLevels;
-        ReloadScene();
+        reloadScene();
     }
 
-    public void PlayLevel(LevelData level)
+    public void playLevel(LevelData level)
     {
         this.level = level;
         SceneManager.LoadSceneAsync("game");
     }
 
-    public void ReloadScene()
+    public void reloadScene()
     {
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }

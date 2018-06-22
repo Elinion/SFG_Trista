@@ -15,7 +15,7 @@ public class TubeShift : MonoBehaviour {
         remainingShifts--;
         if(remainingShifts == 0) {
             remainingShifts = 12;
-            levelController.onShiftEnd();
+            levelController.onTubeShiftEnd();
         }
     }
 

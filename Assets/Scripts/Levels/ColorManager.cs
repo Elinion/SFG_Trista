@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorManager : MonoBehaviour
-{
+public class ColorManager : MonoBehaviour {
     public static ColorManager instance;
 
     [System.Serializable]
-    public class ColorAssets
-    {
+    public class ColorAssets {
         public Sprite ball;
         public Sprite tile;
         public Sprite triangle;
         public Sprite tube;
     }
 
-    public enum Colors
-    {
+    public enum Colors {
         Black,
         Blue,
         Gray,
@@ -42,43 +39,43 @@ public class ColorManager : MonoBehaviour
     public ColorAssets yellow;
     public ColorAssets transparent;
 
-    private Dictionary<Colors, ColorAssets> colorAssets = new Dictionary<Colors, ColorAssets>();
+    private readonly Dictionary<Colors, ColorAssets> colorAssets = new Dictionary<Colors, ColorAssets>();
 
-    private void Awake()
-    {
-        if (instance != null)
-        {
+    private static readonly Colors[] throwableColors = {
+        Colors.Black, Colors.Blue, Colors.Green, Colors.Orange, Colors.Purple, Colors.Red, Colors.White, Colors.Yellow,
+        Colors.Multicolor
+    };
+
+    private void Awake() {
+        if (instance != null) {
             Destroy(gameObject);
-        }
-        else
-        {
+        } else {
             instance = this;
-            SetColorAssets();
+            setColorAssets();
             DontDestroyOnLoad(gameObject);
         }
     }
 
-    public ColorAssets GetColorAssets(Colors color)
-    {
+    public ColorAssets getColorAssets(Colors color) {
         return colorAssets[color];
     }
 
-    public static Colors GetRandomColor()
-    {
-        return (Colors)Random.Range(0, System.Enum.GetValues(typeof(Colors)).Length);
+    public static Colors getRandomThrowableColor() {
+        return throwableColors[Random.Range(0, throwableColors.Length)];
     }
 
-    public static Colors MergeColors(Colors sourceColor, Colors targetColor)
-    {
-        if (sourceColor == targetColor)
-        {
+    public static Colors getRandomColorFromArray(Colors[] colorOptions) {
+        return colorOptions[Random.Range(0, colorOptions.Length)];
+    }
+
+    public static Colors getMergeResult(Colors sourceColor, Colors targetColor) {
+        if (sourceColor == targetColor) {
             return Colors.None;
         }
 
         // Multicolor is the joker color, its color always matches the target
         if (sourceColor == Colors.Multicolor
-            && targetColor != Colors.None)
-        {
+            && targetColor != Colors.None) {
             return sourceColor;
         }
 
@@ -91,37 +88,32 @@ public class ColorManager : MonoBehaviour
 
         // Yellow and Blue gives Green
         if (sourceColor == Colors.Blue && targetColor == Colors.Yellow
-           || sourceColor == Colors.Yellow && targetColor == Colors.Blue)
-        {
+            || sourceColor == Colors.Yellow && targetColor == Colors.Blue) {
             return Colors.Green;
         }
 
         // Yellow and Red gives Orange
         if (sourceColor == Colors.Red && targetColor == Colors.Yellow
-           || sourceColor == Colors.Yellow && targetColor == Colors.Red)
-        {
+            || sourceColor == Colors.Yellow && targetColor == Colors.Red) {
             return Colors.Orange;
         }
 
         // Red and Blue gives Purple
         if (sourceColor == Colors.Blue && targetColor == Colors.Red
-           || sourceColor == Colors.Red && targetColor == Colors.Blue)
-        {
+            || sourceColor == Colors.Red && targetColor == Colors.Blue) {
             return Colors.Purple;
         }
 
         // Black and White gives Gray, the neutral color
         if (sourceColor == Colors.Black && targetColor == Colors.White
-           || sourceColor == Colors.White && targetColor == Colors.Black)
-        {
+            || sourceColor == Colors.White && targetColor == Colors.Black) {
             return Colors.Gray;
         }
 
         return Colors.None;
     }
 
-    private void SetColorAssets()
-    {
+    private void setColorAssets() {
         colorAssets.Add(Colors.Black, black);
         colorAssets.Add(Colors.Blue, blue);
         colorAssets.Add(Colors.Gray, gray);

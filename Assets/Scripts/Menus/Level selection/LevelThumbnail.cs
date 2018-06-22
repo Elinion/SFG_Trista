@@ -15,6 +15,6 @@ public class LevelThumbnail : MonoBehaviour {
     }
 
     public void Play() {
-        GameController.instance.PlayLevel(levelData);
+        GameController.instance.playLevel(levelData);
     }
 }

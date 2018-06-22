@@ -14,7 +14,7 @@ public class LevelTracker : MonoBehaviour
 
     private void SetLevelData()
     {
-        LevelData level = GameController.instance.Level;
+        LevelData level = GameController.instance.level;
         if (tiles.Count != level.tiles.Length)
         {
             Debug.Log("LevelTracker::SetLevelData: the number of tile thumbnails and level tiles don't match.");
@@ -23,7 +23,7 @@ public class LevelTracker : MonoBehaviour
 
         for (int i = 0; i < tiles.Count; i++)
         {
-            tiles[i].sprite = ColorManager.instance.GetColorAssets(level.tiles[i].color).tile;
+            tiles[i].sprite = ColorManager.instance.getColorAssets(level.tiles[i].color).tile;
         }
     }
 

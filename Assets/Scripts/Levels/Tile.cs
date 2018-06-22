@@ -34,7 +34,7 @@ public class Tile : MonoBehaviour
         set
         {
             color = value;
-            GetComponent<SpriteRenderer>().sprite = ColorManager.instance.GetColorAssets(color).tile;
+            GetComponent<SpriteRenderer>().sprite = ColorManager.instance.getColorAssets(color).tile;
         }
     }
 
@@ -107,7 +107,7 @@ public class Tile : MonoBehaviour
     {
         hints[hintLocation].SetActive(true);
         hints[hintLocation].GetComponent<SpriteRenderer>().sprite =
-            ColorManager.instance.GetColorAssets(color).triangle;
+            ColorManager.instance.getColorAssets(color).triangle;
     }
 
     private void Awake()
@@ -129,7 +129,7 @@ public class Tile : MonoBehaviour
 
     private void Merge(ColorManager.Colors otherColor)
     {
-        ColorManager.Colors mergeResult = ColorManager.MergeColors(color, otherColor);
+        ColorManager.Colors mergeResult = ColorManager.getMergeResult(color, otherColor);
         if (mergeResult != ColorManager.Colors.None)
         {
             Color = mergeResult;

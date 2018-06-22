@@ -15,7 +15,7 @@ public class Goal : MonoBehaviour
 
             targetTilesUI[i].sprite = level.pattern[i] == ColorManager.Colors.None ?
                 transparent :
-                ColorManager.instance.GetColorAssets(level.pattern[i]).tile;
+                ColorManager.instance.getColorAssets(level.pattern[i]).tile;
 		}
 	}
 }
