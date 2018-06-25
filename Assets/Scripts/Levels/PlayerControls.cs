@@ -2,47 +2,70 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControls : MonoBehaviour
-{
+public class PlayerControls : MonoBehaviour {
     public LevelController levelController;
 
-    private GameObject[] tubes;
+    public List<Tube> tubes;
+    public Tube selectedTube;
 
-    void Awake()
-    {
-        tubes = GameObject.FindGameObjectsWithTag(Tags.Tube);
-    }
-
-    void Update()
-    {
+    void Update() {
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null)
-            {
-                PlayPressedTube(hit.transform.gameObject);
-            }
+        if (Input.GetMouseButtonDown(0)) {
+            Vector2 mousePosition = getMousePosition();
+            Tube clickedTube = getClickedTube(mousePosition);
+            selectTubeToPlay(clickedTube);
+        } else if (Input.GetMouseButtonUp(0)) {
+            Vector2 mousePosition = getMousePosition();
+            Tube clickedTube = getClickedTube(mousePosition);
+            playOrCancelTube(clickedTube);
         }
 #else
-        if (Input.touchCount > 0) {
-			RaycastHit2D hit = Physics2D.Raycast (Input.touches [0].position, Vector2.zero);
-			if (hit.collider != null) {
-				PlayPressedTube (hit.transform.gameObject);
-			}
-		}
+        if (Input.touchCount <= 0) {
+            return;
+        }
+        
+        Touch touch = Input.touches[0];
+        Tube clickedTube = getClickedTube(touch.position);
+        
+        if (touch.phase == TouchPhase.Began) {
+            selectTubeToPlay(clickedTube);
+        } else if (touch.phase == TouchPhase.Ended) {
+            playOrCancelTube(clickedTube);
+        }
 #endif
-	}
+    }
 
-    private void PlayPressedTube (GameObject clickedObject)
-	{
-        foreach (GameObject tube in tubes) {
-			if (tube == clickedObject) {
-                levelController.playTube(tube.transform.parent.GetComponent<Tube>());
-			}
-		}
-	}
+    private Vector2 getMousePosition() {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return new Vector2(mousePos.x, mousePos.y);
+    }
+
+    private void selectTubeToPlay(Tube clickedTube) {
+        foreach (Tube tube in tubes) {
+            if (tube == clickedTube) {
+                selectedTube = clickedTube;
+            }
+        }
+    }
+
+    private void playOrCancelTube(Tube tube) {
+        if (tube == null || tube != selectedTube) {
+            cancelPlay();
+        } else {
+            playSelectedTube();
+        }
+    }
+
+    private Tube getClickedTube(Vector2 clickPosition) {
+        RaycastHit2D hit = Physics2D.Raycast(clickPosition, Vector2.zero);
+        return hit.collider == null ? null : hit.transform.parent.GetComponent<Tube>();
+    }
+
+    private void playSelectedTube() {
+        levelController.playTube(selectedTube);
+    }
+
+    private void cancelPlay() {
+        selectedTube = null;
+    }
 }

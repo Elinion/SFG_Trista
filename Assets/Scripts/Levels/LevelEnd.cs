@@ -27,7 +27,7 @@ public class LevelEnd : MonoBehaviour {
                 StartCoroutine(showPerfectEnd(waitForSeconds));
                 break;
             case Level.Progress.NotOk:
-                StartCoroutine(showNotOktEnd(waitForSeconds));
+                StartCoroutine(showNotOkEnd(waitForSeconds));
                 break;
         }
     }
@@ -42,9 +42,8 @@ public class LevelEnd : MonoBehaviour {
         levelPerfect.SetActive(true);
     }
 
-    private IEnumerator showNotOktEnd(float waitForSeconds) {
+    private IEnumerator showNotOkEnd(float waitForSeconds) {
         yield return new WaitForSeconds(waitForSeconds);
         levelNotOk.SetActive(true);
     }
-    
 }

@@ -37,8 +37,6 @@ public class Board : MonoBehaviour
     public List<Line> lines = new List<Line>();
     public List<Tile> tiles = new List<Tile>();
 
-    private int boardSize;
-
     public List<Tile> GetAlignedTiles()
     {
         List<Tile> alignedTiles = new List<Tile>();
@@ -68,53 +66,19 @@ public class Board : MonoBehaviour
             return;
         }
 
-        boardSize = (int) Mathf.Sqrt((float) tiles.Count);
-
         for (int i = 0; i < tiles.Count; i++)
         {
             tiles[i].Color = level.tiles[i].defaultColor;
         }
-    }
-
-    public bool IsLevelCompleted(LevelData level)
-    {
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            if (!DoesTileMatch(tiles[i], level.tiles[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private bool DoesTileStriclyMatch(Tile tile, TileData tileData)
-    {
-        return tileData.color == tile.Color
-               && tileData.minimumValue <= tile.Level;
-    }
-
-    public bool IsLevelPerfectlyCompleted(LevelData level)
-    {
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            if (!DoesTileStriclyMatch(tiles[i], level.tiles[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public void PlayLevelCompleteAnimation(LevelData level)
+    }  
+    
+    public void playLevelCompleteAnimation(LevelData level)
     {
         for (int i = 0; i < tiles.Count; i++)
         {
             Tile currentTile = tiles[i];
             if (level.tiles[i].isRequired
-                && DoesTileMatch(currentTile, level.tiles[i]))
+                && doesTileMatch(currentTile, level.tiles[i]))
             {
                 currentTile.PlaySuccessAnimation();
             }
@@ -125,7 +89,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private bool DoesTileMatch(Tile tile, TileData tileData)
+    private bool doesTileMatch(Tile tile, TileData tileData)
     {
         if (tileData.isRequired)
         {

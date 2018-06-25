@@ -31,7 +31,7 @@ public class LevelController : MonoBehaviour {
             tubeController.showTubeHints();
             waitForPlayerInput();
         } else {
-            endLevel();
+            endLevel(Level.Progress.NotOk);
         }
     }
 
@@ -76,7 +76,11 @@ public class LevelController : MonoBehaviour {
 
     private void endLevel(Level.Progress levelProgress) {
         board.HideTileHints();
-        board.PlayLevelCompleteAnimation(GameController.instance.level);
+
+        if (levelProgress == Level.Progress.Ok || levelProgress == Level.Progress.Perfect) {
+            board.playLevelCompleteAnimation(GameController.instance.level);
+        }
+        
         levelEnd.showEnd(levelProgress);
     }
 
@@ -116,10 +120,6 @@ public class LevelController : MonoBehaviour {
         colorSequenceIndex = ++colorSequenceIndex % GameController.instance.level.tubeSequence.Length;
         ColorGeneratorData colorGen = GameController.instance.level.tubeSequence[colorSequenceIndex];
         lastTubePlayed.Color = colorGen.generateRandomColor ? getRandomLevelColor() : colorGen.fixedColor;
-    }
-
-    private void endLevel() {
-        Debug.Log("Game over");
     }
 
     private ColorManager.Colors getRandomLevelColor() {
