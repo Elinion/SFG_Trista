@@ -37,7 +37,7 @@ public class Board : MonoBehaviour
     public List<Line> lines = new List<Line>();
     public List<Tile> tiles = new List<Tile>();
 
-    public List<Tile> GetAlignedTiles()
+    public List<Tile> getAlignedTiles()
     {
         List<Tile> alignedTiles = new List<Tile>();
         lines.ForEach(line =>
@@ -55,10 +55,10 @@ public class Board : MonoBehaviour
 
     public void HideTileHints()
     {
-        tiles.ForEach(tile => tile.HideHints());
+        tiles.ForEach(tile => tile.hideHints());
     }
 
-    public void InitBoard(LevelData level)
+    public void initBoard(LevelData level)
     {
         if (tiles.Count != level.tiles.Length)
         {
@@ -66,9 +66,11 @@ public class Board : MonoBehaviour
             return;
         }
 
+        int tileGrowthIncrement = level.enableTileGrowth ? 1 : 0;
         for (int i = 0; i < tiles.Count; i++)
         {
             tiles[i].Color = level.tiles[i].defaultColor;
+            tiles[i].growthIncrement = tileGrowthIncrement;
         }
     }  
     
@@ -80,11 +82,11 @@ public class Board : MonoBehaviour
             if (level.tiles[i].isRequired
                 && doesTileMatch(currentTile, level.tiles[i]))
             {
-                currentTile.PlaySuccessAnimation();
+                currentTile.playSuccessAnimation();
             }
             else
             {
-                currentTile.Remove();
+                currentTile.remove();
             }
         }
     }

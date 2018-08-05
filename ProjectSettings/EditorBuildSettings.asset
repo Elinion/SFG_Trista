@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Persistent.unity
+    path: Assets/Scenes/persistent.unity
     guid: c6b0c0a9e567f40079965973bb0b46af
   - enabled: 1
     path: Assets/Scenes/mainMenu.unity
@@ -21,5 +21,15 @@ EditorBuildSettings:
     path: Assets/Scenes/out_survivalMode.unity
     guid: 05b1cb233f5694a4f8f05155fda34fa1
   - enabled: 1
-    path: Assets/Scenes/levelSelection.unity
+    path: Assets/Scenes/levelSelectionMenu.unity
     guid: 253588366613f43c19d0b81cbb4691b6
+  - enabled: 1
+    path: Assets/Scenes/tuto_1_pattern.unity
+    guid: 74ca35ddd823e4e7ca6bc713755ca765
+  - enabled: 1
+    path: Assets/Scenes/tuto_2_turningTubes.unity
+    guid: 584639a6ccb06415e99d894cc90af61e
+  - enabled: 1
+    path: Assets/Scenes/tuto_3_mergingColors.unity
+    guid: c363bdf3d7e92490c82143fe214d94fa
+  m_configObjects: {}

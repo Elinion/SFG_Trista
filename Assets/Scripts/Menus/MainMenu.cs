@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+	private void Awake() {
+		SceneManager.LoadScene(Tags.Persistent, LoadSceneMode.Additive);
+	}
+
 	public void Quit ()
 	{
 		Application.Quit ();
@@ -12,12 +16,11 @@ public class MainMenu : MonoBehaviour
 
 	public void GoToLevels ()
 	{
-		SceneManager.LoadSceneAsync ("levelSelection");
+		GameController.instance.GoToLevelMenu();
 	}
 
 	public void GoToSurvivalMode ()
 	{
-		GlobalLevelData.selectedLevelId = -1;
 		SceneManager.LoadSceneAsync ("survivalMode");
 	}
 }

@@ -4,42 +4,45 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-public class DataController : MonoBehaviour
-{
+public class DataController : MonoBehaviour {
+    public static DataController instance = null;
 
     public bool loadMainMenuOnStart = true;
 
     private WorldData[] worlds;
-    public WorldData[] Worlds
-    {
-        get { return worlds; }
-    }
 
-    private string gameDataFileName = "data.json";
+    private const string GameDataFileName = "data.json";
 
-    void Awake()
-    {
+    void Awake() {
+        if (instance != null) {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
         DontDestroyOnLoad(gameObject);
-        LoadGameData();
-
-        if (loadMainMenuOnStart)
-        {
+        loadGameData();
+        if (loadMainMenuOnStart) {
             SceneManager.LoadScene("mainMenu");
         }
     }
 
-    private void LoadGameData()
-    {
-        string filePath = Path.Combine(Application.streamingAssetsPath, gameDataFileName);
-        if (File.Exists(filePath))
-        {
+    private void loadGameData() {
+        string filePath = Path.Combine(Application.streamingAssetsPath, GameDataFileName);
+        if (File.Exists(filePath)) {
             string dataAsJson = File.ReadAllText(filePath);
             GameData loadedData = JsonUtility.FromJson<GameData>(dataAsJson);
             worlds = loadedData.worlds;
-        }
-        else
-        {
+        } else {
             Debug.LogError("Cannot load game data.");
         }
+    }
+
+    public WorldData getWorldById(int worldId) {
+        if (worldId < 0 || worldId >= worlds.Length) {
+            Debug.Log("There is no world that match the requested world id: " + worldId);
+        }
+
+        return worlds[worldId];
     }
 }

@@ -60,11 +60,18 @@ public class ColorManager : MonoBehaviour {
         return colorAssets[color];
     }
 
-    public static Colors getRandomThrowableColor() {
+    public ColorManager.Colors getRandomLevelColor() {
+        LevelData level = GameController.instance.levelData;
+        return level.possibleColors.Length == 0
+            ? getRandomThrowableColor()
+            : getRandomColorFromArray(level.possibleColors);
+    }
+
+    private Colors getRandomThrowableColor() {
         return throwableColors[Random.Range(0, throwableColors.Length)];
     }
 
-    public static Colors getRandomColorFromArray(Colors[] colorOptions) {
+    private Colors getRandomColorFromArray(Colors[] colorOptions) {
         return colorOptions[Random.Range(0, colorOptions.Length)];
     }
 

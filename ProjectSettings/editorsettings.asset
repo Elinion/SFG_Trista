@@ -9,7 +9,7 @@ EditorSettings:
   m_DefaultBehaviorMode: 1
   m_SpritePackerMode: 4
   m_SpritePackerPaddingPower: 1
-  m_ProjectGenerationIncludedExtensions: txt;xml;fnt;cd
+  m_ProjectGenerationIncludedExtensions: txt;xml;fnt;cd;asmdef
   m_ProjectGenerationRootNamespace: 
   m_UserGeneratedProjectSuffix: 
   m_CollabEditorSettings:

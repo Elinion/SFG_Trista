@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControls : MonoBehaviour {
-    public LevelController levelController;
-
+    public Turn turn;
     public List<Tube> tubes;
-    public Tube selectedTube;
+    
+    private Tube selectedTube;
 
     void Update() {
 #if UNITY_EDITOR
@@ -62,7 +62,7 @@ public class PlayerControls : MonoBehaviour {
     }
 
     private void playSelectedTube() {
-        levelController.playTube(selectedTube);
+        turn.playTube(selectedTube);
     }
 
     private void cancelPlay() {
