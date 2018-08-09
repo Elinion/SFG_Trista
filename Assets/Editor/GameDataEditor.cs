@@ -8,12 +8,11 @@ public class GameDataEditor : EditorWindow {
 
     public GameData gameData;
 
-    private string gameDataProjectFilePath = "/StreamingAssets/data.json";
+    private const string GameDataProjectFilePath = "/StreamingAssets/data.json";
 
     [MenuItem ("Window/Game Data Editor")]
     static void Init() {
-        GameDataEditor window = (GameDataEditor)EditorWindow.GetWindow(typeof(GameDataEditor));
-        window.Show();
+        EditorWindow.GetWindow(typeof(GameDataEditor)).Show();
     }
 
     private void OnGUI()
@@ -37,7 +36,7 @@ public class GameDataEditor : EditorWindow {
     }
 
     private void LoadGameData() {
-        string filePath = Application.dataPath + gameDataProjectFilePath;
+        string filePath = Application.dataPath + GameDataProjectFilePath;
         if(File.Exists(filePath)) {
             string dataAsJson = File.ReadAllText(filePath);
             gameData = JsonUtility.FromJson<GameData>(dataAsJson);
@@ -48,7 +47,7 @@ public class GameDataEditor : EditorWindow {
 
     private void SaveGameData() {
         string dataAsJson = JsonUtility.ToJson(gameData);
-        string filePath = Application.dataPath + gameDataProjectFilePath;
+        string filePath = Application.dataPath + GameDataProjectFilePath;
         File.WriteAllText(filePath, dataAsJson);
     }
 }

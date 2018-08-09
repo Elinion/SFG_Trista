@@ -10,12 +10,13 @@ public class GameController : MonoBehaviour {
     public LevelData levelData { get; private set; }
 
     private void Awake() {
-        if (instance != null) {
-            Destroy(gameObject);
-            return;
+        if (instance == null) {
+            instance = this;
+        } else if (instance != this)
+        {
+            Destroy (gameObject);
         }
 
-        instance = this;
         DontDestroyOnLoad(gameObject);
     }
 

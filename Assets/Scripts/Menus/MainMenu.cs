@@ -9,18 +9,23 @@ public class MainMenu : MonoBehaviour
 		SceneManager.LoadScene(Tags.Persistent, LoadSceneMode.Additive);
 	}
 
-	public void Quit ()
+	public void quit ()
 	{
 		Application.Quit ();
 	}
 
-	public void GoToLevels ()
+	public void goToLevels ()
 	{
 		GameController.instance.GoToLevelMenu();
 	}
 
-	public void GoToSurvivalMode ()
+	public void goToSurvivalMode ()
 	{
 		SceneManager.LoadSceneAsync ("survivalMode");
+	}
+
+	public void goToSettings() {
+		PlayerPrefs.DeleteKey(LocalizationManager.SelectedLocalizationText);
+		SceneManager.LoadSceneAsync("languageSelectionMenu");
 	}
 }

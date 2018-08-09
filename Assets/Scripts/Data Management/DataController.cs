@@ -14,13 +14,14 @@ public class DataController : MonoBehaviour {
     private const string GameDataFileName = "data.json";
 
     void Awake() {
-        if (instance != null) {
-            Destroy(gameObject);
-            return;
+        if (instance == null) {
+            instance = this;
+        } else if (instance != this)
+        {
+            Destroy (gameObject);
         }
 
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad (gameObject);
         loadGameData();
         if (loadMainMenuOnStart) {
             SceneManager.LoadScene("mainMenu");
@@ -40,7 +41,7 @@ public class DataController : MonoBehaviour {
 
     public WorldData getWorldById(int worldId) {
         if (worldId < 0 || worldId >= worlds.Length) {
-            Debug.Log("There is no world that match the requested world id: " + worldId);
+            Debug.Log("There is no world that matches the requested world id: " + worldId);
         }
 
         return worlds[worldId];
