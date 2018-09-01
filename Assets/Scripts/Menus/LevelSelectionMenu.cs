@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using GameData;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,49 +18,22 @@ public class LevelSelectionMenu : MonoBehaviour {
     }
 
     private void createCurrentLevelGroupPreviews() {
-        LevelGroupData levelGroupData = getLevelGroups()[GlobalData.selectedLevelGroupId];
-        levelGroupName.text = levelGroupData.levelGroupName;
+        LevelGroup levelGroupData = GameController.instance.getLevelGroup();
+        levelGroupName.text = levelGroupData.name;
 
         for (int i = 0; i < levelGroupData.levels.Length; i++) {
             levelPreviews[i].gameObject.SetActive(true);
-            levelPreviews[i].setLevelData(levelGroupData.levels[i]);
+            levelPreviews[i].setLevel(levelGroupData.levels[i]);
         }
     }
 
-    public void GoToNextPage() {
-        int nextLevelGroupId = (GlobalData.selectedLevelGroupId + 1) % getLevelGroups().Length;
-        setLevelGroupId(nextLevelGroupId);
+    public void goToNextPage() {
+        GameController.instance.goToNextLevel();
         createCurrentLevelGroupPreviews();
     }
 
-    public void GoToPreviousPage() {
-        if (GlobalData.selectedLevelGroupId == 0) {
-            goToLastPage();
-            return;
-        }
-
-        int previousLevelGroupId = GlobalData.selectedLevelGroupId - 1;
-        setLevelGroupId(previousLevelGroupId);
+    public void goToPreviousPage() {
+        GameController.instance.selectPreviousLevelGroup();
         createCurrentLevelGroupPreviews();
-    }
-
-    private void goToLastPage() {
-        int lastLevelGroupId = getLevelGroups().Length - 1;
-        setLevelGroupId(lastLevelGroupId);
-        createCurrentLevelGroupPreviews();
-    }
-
-    private void setLevelGroupId(int levelGroupId) {
-        GlobalData.selectedLevelGroupId = levelGroupId;
-    }
-
-    private void setLevelWorldId(int levelWorldId) {
-        GlobalData.selectedWorldId = levelWorldId;
-    }
-
-    private LevelGroupData[] getLevelGroups() {
-        return DataController.instance
-            .getWorldById(GlobalData.selectedWorldId)
-            .levelGroups;
     }
 }

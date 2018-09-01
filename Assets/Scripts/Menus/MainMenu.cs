@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
 
 	public void goToLevels ()
 	{
-		GameController.instance.GoToLevelMenu();
+		GameController.instance.goToLevelSelectionMenu();
 	}
 
 	public void goToSurvivalMode ()
@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
 	}
 
 	public void goToSettings() {
-		PlayerPrefs.DeleteKey(LocalizationManager.SelectedLocalizationText);
-		SceneManager.LoadSceneAsync("languageSelectionMenu");
+		LocalizationController.instance.deleteSavedLanguage();
+		GameController.instance.goToLanguageSelection();
 	}
 }

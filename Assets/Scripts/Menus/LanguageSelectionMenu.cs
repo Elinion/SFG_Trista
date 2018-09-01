@@ -1,16 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LanguageSelectionMenu : MonoBehaviour {
 
-	private const string EnglishLocalizationFileName = "localizationText_en.json";
-	private const string FrenchLocalizationFileName = "localizationText_fr.json";
-	
-	public void loadEnglish() {
-		LocalizationManager.instance.loadLocalizedText(EnglishLocalizationFileName);
-	}
-	public void loadFrench() {
-		LocalizationManager.instance.loadLocalizedText(FrenchLocalizationFileName);
-	}
+    public void loadEnglish() {
+        load(Language.English);
+    }
+
+    public void loadFrench() {
+        load(Language.French);
+    }
+
+    public void goBack() {
+        SceneManager.LoadScene(Scenes.MainMenu);
+    }
+    
+    private void load(Language language) {
+        LocalizationController.instance.loadLanguage(language);
+    }
 }
