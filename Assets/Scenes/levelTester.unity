@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldId: 0
   levelGroupId: 0
-  levelId: 2
+  levelId: 0
 --- !u!4 &22625193
 Transform:
   m_ObjectHideFlags: 0

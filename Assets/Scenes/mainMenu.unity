@@ -1158,7 +1158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000019073486}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.63}
 --- !u!114 &702180201
@@ -2510,6 +2510,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c43ba7b56eaaf4b67bcc17b13a064cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logo: {fileID: 683428833}
+  screenFadeIn: {fileID: 669633177}
+  buttonsFadeIn: {fileID: 702180199}
 --- !u!95 &1848260824
 Animator:
   serializedVersion: 3

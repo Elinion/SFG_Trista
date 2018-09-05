@@ -25,6 +25,10 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene(Scenes.LanguageSelectionMenu);
     }
 
+    public void goToLevelGroupSelectionMenu() {
+        SceneManager.LoadScene(Scenes.LevelGroupSelectionMenu);
+    }
+
     public void goToLevelSelectionMenu() {
         SceneManager.LoadScene(Scenes.LevelSelectionMenu);
     }
@@ -33,9 +37,18 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene(Scenes.MainMenu);
     }
 
+    public void goToMainMenuAndSkipAnimation() {
+        MainMenu.playAnimation = false;
+        SceneManager.LoadScene(Scenes.MainMenu);
+    }
+
     public void goToNextLevel() {
         int nextLevelId = selectedLevel + 1;
         playLevel(getLevelGroup().levels[nextLevelId]);
+    }
+    
+    public void selectLevelGroup(LevelGroup levelGroup) {
+        selectedLevelGroup = levelGroup.orderIndex;
     }
 
     public void selectNextLevelGroup() {
@@ -60,6 +73,14 @@ public class GameController : MonoBehaviour {
 
     public bool isNextLevelGroup() {
         return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup + 1) != null;
+    }
+
+    public bool isPreviousLevelGroup() {
+        return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup - 1) != null;
+    }
+
+    public World getWorld() {
+        return ByOrderIndexAccessor.getWorld(selectedWorld);
     }
 
     public void playLevel(Level level) {

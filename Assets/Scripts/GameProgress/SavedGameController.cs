@@ -2,12 +2,14 @@
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine;
+using GameElement = GameData.GameElement;
 using Level = GameData.Level;
+using LevelGroup = GameData.LevelGroup;
 
 public class SavedGameController : MonoBehaviour {
     public static SavedGameController instance;
 
-    public Game gameProgress { get; private set; }
+    private Game gameProgress { get; set; }
 
     private string gameProgressFileName = "gameProgress";
     private GameProgressSynchronizer gameProgressSynchronizer;
@@ -47,7 +49,26 @@ public class SavedGameController : MonoBehaviour {
     }
 
     public State getLevelState(Level level) {
-        return gameProgressSynchronizer.getLevelState(level.id);
+        if (!gameProgress.levels.ContainsKey(level.id)) {
+            logGameElementNotFound(level);
+        }
+
+        return gameProgress.levels[level.id].state;
+    }
+
+    public State getLevelGroupState(LevelGroup levelGroup) {
+        if (!gameProgress.levelGroups.ContainsKey(levelGroup.id)) {
+            logGameElementNotFound(levelGroup);
+        }
+
+        return gameProgress.levelGroups[levelGroup.id].state;
+    }
+
+    private void logGameElementNotFound(GameElement gameElement) {
+        Debug.Log(string.Format("Could not get {0} state. Id not found. Name: {1}. Id: {2}", 
+            gameElement.GetType(), 
+            gameElement.name, 
+            gameElement.id));
     }
 
     public void updateLevelState(Level level, State state) {

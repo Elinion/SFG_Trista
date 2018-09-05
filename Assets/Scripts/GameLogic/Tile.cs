@@ -40,6 +40,12 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    private void Awake() {
+        Reset();
+        SetUpHints();
+        GetComponent<Animator>().speed = animatorSpeed;
+    }
+
     public static bool isValid(GameData.Tile expected, Tile actual) {
         return expected.color == actual.Color && expected.minimumValue <= actual.Level;
     }
@@ -81,12 +87,6 @@ public class Tile : MonoBehaviour {
         hints[hintLocation].SetActive(true);
         hints[hintLocation].GetComponent<SpriteRenderer>().sprite =
             ColorManager.instance.getColorAssets(color).triangle;
-    }
-    
-    private void Start() {
-        Reset();
-        SetUpHints();
-        GetComponent<Animator>().speed = animatorSpeed;
     }
 
     private void GainColor(Colors otherColor) {

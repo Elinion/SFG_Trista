@@ -8,13 +8,6 @@ public class GameProgressSynchronizer {
     private const State DefaultState = State.NotOk;
     private const State BestState = State.Perfect;
 
-    public State getLevelState(string levelId) {
-#if UNITY_EDITOR
-        return DefaultState;
-#endif
-        return SavedGameController.instance.gameProgress.levels[levelId].state;
-    }
-
     public void synchronizeGameDataAndProgress(Game gameProgress) {
         gameProgress.init();
         World[] worldsData = DataController.instance.worlds;

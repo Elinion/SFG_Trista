@@ -1,39 +1,54 @@
-﻿using GameData;
+﻿using System.Collections.Generic;
+using GameData;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelSelectionMenu : MonoBehaviour {
     public Text levelGroupName;
     public LevelThumbnail[] levelPreviews = new LevelThumbnail[10];
+    public GameObject nextLevelGroupButton;
+    public GameObject previousLevelGroupButton;
 
-    void Start() {
-        initLevelPreviews();
-        createCurrentLevelGroupPreviews();
+    void Awake() {
+        hideLevelPreviews();
     }
 
-    private void initLevelPreviews() {
+    void Start() {
+        setUpUI();
+    }
+
+    private void hideLevelPreviews() {
         foreach (LevelThumbnail level in levelPreviews) {
             level.gameObject.SetActive(false);
         }
     }
 
-    private void createCurrentLevelGroupPreviews() {
-        LevelGroup levelGroupData = GameController.instance.getLevelGroup();
-        levelGroupName.text = levelGroupData.name;
+    private void setUpUI() {
+        LevelGroup levelGroup = GameController.instance.getLevelGroup();
+        levelGroupName.text = levelGroup.name;
+        setUpLevelPreviews(levelGroup.levels);
+        nextLevelGroupButton.SetActive(GameController.instance.isNextLevelGroup());
+        previousLevelGroupButton.SetActive(GameController.instance.isPreviousLevelGroup());
+    }
 
-        for (int i = 0; i < levelGroupData.levels.Length; i++) {
+    private void setUpLevelPreviews(IList<Level> levels) {
+        for (int i = 0; i < levels.Count; i++) {
             levelPreviews[i].gameObject.SetActive(true);
-            levelPreviews[i].setLevel(levelGroupData.levels[i]);
+            levelPreviews[i].setLevel(levels[i]);
         }
     }
 
+    public void goBackToLevelGroupSelectionMenu() {
+        GameController.instance.goToLevelGroupSelectionMenu();
+    }
+
     public void goToNextPage() {
-        GameController.instance.goToNextLevel();
-        createCurrentLevelGroupPreviews();
+        GameController.instance.selectNextLevelGroup();
+        setUpUI();
     }
 
     public void goToPreviousPage() {
         GameController.instance.selectPreviousLevelGroup();
-        createCurrentLevelGroupPreviews();
+        setUpUI();
     }
 }

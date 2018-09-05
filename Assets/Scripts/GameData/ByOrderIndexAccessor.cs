@@ -47,7 +47,10 @@ namespace GameData {
             }
 
             foreach (LevelGroup levelGroup in levelGroups) {
-                levelGroupsByOrderIndex[worldOrderIndex].Add(levelGroup.orderIndex, levelGroup);
+                if (!levelGroupsByOrderIndex[worldOrderIndex].ContainsKey(levelGroup.orderIndex)) {
+                    levelGroupsByOrderIndex[worldOrderIndex].Add(levelGroup.orderIndex, levelGroup);
+                }
+
                 setUpLevelsByOrderIndex(worldOrderIndex, levelGroup.orderIndex, levelGroup.levels);
             }
         }
@@ -62,7 +65,9 @@ namespace GameData {
             }
 
             foreach (Level level in levels) {
-                levelsByOrderIndex[worldOrderIndex][levelGroupOrderIndex].Add(level.orderIndex, level);
+                if (!levelsByOrderIndex[worldOrderIndex][levelGroupOrderIndex].ContainsKey(level.orderIndex)) {
+                    levelsByOrderIndex[worldOrderIndex][levelGroupOrderIndex].Add(level.orderIndex, level);
+                }
             }
         }
     }

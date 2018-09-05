@@ -37,7 +37,10 @@ public class GameProgressLoader {
     }
 
     private void loadGameProgressFromDisk() {
-        Debug.Log("Load game progress from disk");
+        Debug.Log("Loading game progress from disk");
+        GameProgress.Game loadedGameProgress = new GameProgress.Game();
+        loadedGameProgress.init();
+        onLoaded(loadedGameProgress);
     }
 
     private void onGameProgressOpened(SavedGameRequestStatus status, ISavedGameMetadata game) {
