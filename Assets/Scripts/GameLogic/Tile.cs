@@ -18,9 +18,11 @@ public class Tile : MonoBehaviour {
     public GameObject bottomHint;
     public GameObject leftHint;
     public GameObject rightHint;
+    public bool isAnimating { get; private set; }
 
     private readonly Dictionary<HintLocation, GameObject> hints = new Dictionary<HintLocation, GameObject>();
     private Colors color = Colors.None;
+
 
     public Colors Color {
         get { return color; }
@@ -69,16 +71,19 @@ public class Tile : MonoBehaviour {
     }
 
     public void playSuccessAnimation() {
+        isAnimating = true;
         GetComponent<Animator>().SetTrigger("Flip");
     }
 
     public void remove() {
+        isAnimating = true;
         GetComponent<Animator>().SetTrigger("ShrinkAway");
         Invoke("Reset", 1);
     }
 
     public void Reset() {
         GetComponent<Animator>().SetTrigger("Idle");
+        isAnimating = false;
         Color = Colors.None;
         Level = 1;
     }

@@ -125,6 +125,10 @@ public class Tube : MonoBehaviour {
     }
 
     private void ShowHintForTarget(Tile target) {
+        if (target.isAnimating) {
+            return;
+        }
+
         Colors mergeResultWithTarget = ColorManager.getMergeResult(Color, target.Color);
         if (mergeResultWithTarget != Colors.None) {
             target.showHint(hintLocations[direction], mergeResultWithTarget);

@@ -15,6 +15,10 @@ public class LocalizedText : MonoBehaviour {
     public StringFormat stringFormat = StringFormat.None;
 
     void Start() {
+        if (string.IsNullOrEmpty(key)) {
+            key = GetComponent<Text>().text;
+        }
+        
         string localizedValue = LocalizationController.instance.getLocalizedValue(key);
         localizedValue = getFormattedText(localizedValue, stringFormat);
 

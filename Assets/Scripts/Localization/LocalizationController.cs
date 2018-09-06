@@ -57,11 +57,11 @@ public class LocalizationController : MonoBehaviour {
     }
 
     public string getLocalizedValue(string key) {
-        string result = MissingTextString;
         if (localizedText.ContainsKey(key)) {
-            result = localizedText[key];
+            return localizedText[key];
         }
 
-        return result;
+        Debug.Log("Missing localized text: " + key);
+        return key;
     }
 }

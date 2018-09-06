@@ -881,6 +881,7 @@ GameObject:
   - component: {fileID: 587470579}
   - component: {fileID: 587470581}
   - component: {fileID: 587470580}
+  - component: {fileID: 587470582}
   m_Layer: 5
   m_Name: Level group title
   m_TagString: Untagged
@@ -946,6 +947,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 587470578}
   m_CullTransparentMesh: 0
+--- !u!114 &587470582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 587470578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf83ea42544c4e02a8bd8437be9ea8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 
+  stringFormat: 3
 --- !u!224 &610020090 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224754734824421784, guid: 3b254f89f0f2c41f3a562ae64800b24e,
@@ -2344,6 +2358,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1007404102}
+    - target: {fileID: 114369481628404974, guid: daa515c0dde8548a881156c4f6e5599a,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: goBackToLevelGroupSelectionMenu
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: daa515c0dde8548a881156c4f6e5599a, type: 2}
   m_IsPrefabAsset: 0

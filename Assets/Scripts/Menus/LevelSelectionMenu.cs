@@ -11,9 +11,6 @@ public class LevelSelectionMenu : MonoBehaviour {
 
     void Awake() {
         hideLevelPreviews();
-    }
-
-    void Start() {
         setUpUI();
     }
 
