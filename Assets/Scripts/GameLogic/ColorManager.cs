@@ -12,6 +12,20 @@ public class ColorManager : MonoBehaviour {
         public Sprite tile;
         public Sprite triangle;
         public Sprite tube;
+        public Sprite squareTile;
+        public string hexCode;
+
+        public Color color {
+            get {
+                if (string.IsNullOrEmpty(hexCode)) {
+                    return new Color(0, 0, 0, 0);
+                }
+
+                Color value = Color.white;
+                ColorUtility.TryParseHtmlString("#" + hexCode, out value);
+                return value;
+            }
+        }
     }
 
     public ColorAssets black;
@@ -49,9 +63,7 @@ public class ColorManager : MonoBehaviour {
 
     public Colors getRandomLevelColor() {
         Level level = GameController.instance.level;
-        return level.tubeColors.Length == 0
-            ? getRandomThrowableColor()
-            : getRandomColorFromArray(level.tubeColors);
+        return level.tubeColors.Length == 0 ? getRandomThrowableColor() : getRandomColorFromArray(level.tubeColors);
     }
 
     private Colors getRandomThrowableColor() {

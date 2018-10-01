@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
+using UnityEngine;
 
 namespace GameProgress {
     public enum State {
@@ -12,41 +13,72 @@ namespace GameProgress {
 
     [Serializable]
     public abstract class GameElement {
+        public string id;
         public State state;
     }
 
     [Serializable]
+    public class WorldByName {
+        public string name;
+        public World world;
+    }
+
+    [Serializable]
     public class Game : GameElement {
-        public int score;
-        public Dictionary<string, World> worlds { get; set; }
-        public Dictionary<string, LevelGroup> levelGroups { get; set; }
-        public Dictionary<string, Level> levels { get; set; }
+        public World[] worlds;
+        public LevelGroup[] levelGroups;
+        public Level[] levels;
+
+        [NonSerialized] 
+        public Dictionary<string, World> worldsById;
+
+        [NonSerialized]
+        public Dictionary<string, LevelGroup> levelGroupsById;
+        
+        [NonSerialized]
+        public Dictionary<string, Level> levelsById;
+        
         private List<string> synchronizedElements;
 
         public void init() {
-            if (worlds == null) {
-                worlds = new Dictionary<string, World>();
+            worldsById = new Dictionary<string, World>();
+            if (worlds != null) {
+                foreach (World world in worlds) {
+                    worldsById.Add(world.id, world);
+                }
             }
 
-            if (levelGroups == null) {
-                levelGroups = new Dictionary<string, LevelGroup>();
+            levelGroupsById = new Dictionary<string, LevelGroup>();
+            if (levelGroups != null) {
+                foreach (LevelGroup levelGroup in levelGroups) {
+                    levelGroupsById.Add(levelGroup.id, levelGroup);
+                }
             }
 
-            if (levels == null) {
-                levels = new Dictionary<string, Level>();
+            levelsById = new Dictionary<string, Level>();
+            if (levels != null) {
+                foreach (Level level in levels) {
+                    levelsById.Add(level.id, level);
+                }
             }
 
             synchronizedElements = new List<string>();
         }
 
-        public byte[] toSaveFormat() {
-            string gameProgressAsJson = JsonConvert.SerializeObject(this);
-            return Encoding.Default.GetBytes(gameProgressAsJson);
+        public void toSaveFormat() {
+            worlds = worldsById.Values.ToArray();
+            levelGroups = levelGroupsById.Values.ToArray();
+            levels = levelsById.Values.ToArray();
+        }
+
+        public byte[] toSaveFormatAsBytes() {
+//            return Encoding.Default.GetBytes(toSaveFormat());
+            return null;
         }
 
         public static Game fromSaveFormat(byte[] gameProgressBytes) {
             string gameProgressAsJson = Encoding.Default.GetString(gameProgressBytes);
-            return JsonConvert.DeserializeObject<Game>(gameProgressAsJson);
+            return JsonUtility.FromJson<Game>(gameProgressAsJson);
         }
 
         public void markAsSynchronized(string elementId) {
@@ -60,25 +92,23 @@ namespace GameProgress {
         }
 
         public void removeUnsynchronizedElements() {
-            foreach (string id in worlds.Keys) {
-                if (!synchronizedElements.Contains(id)) {
-                    worlds.Remove(id);
-                }
-            }
-
-            foreach (string id in levelGroups.Keys) {
-                if (!synchronizedElements.Contains(id)) {
-                    levelGroups.Remove(id);
-                }
-            }
-
-            foreach (string id in levels.Keys) {
-                if (!synchronizedElements.Contains(id)) {
-                    levels.Remove(id);
-                }
-            }
-
+            removeUnsynchronizedElements(worldsById);
+            removeUnsynchronizedElements(levelGroupsById);
+            removeUnsynchronizedElements(levelsById);
             synchronizedElements.Clear();
+        }
+
+        private void removeUnsynchronizedElements<T>(Dictionary<string, T> gameElements) {
+            List<string> elementsToRemove = new List<string>();
+            foreach (string id in gameElements.Keys) {
+                if (!synchronizedElements.Contains(id)) {
+                    elementsToRemove.Add(id);
+                }
+            }
+
+            foreach (string elementId in elementsToRemove) {
+                gameElements.Remove(elementId);
+            }
         }
     }
 
@@ -89,5 +119,6 @@ namespace GameProgress {
     public class LevelGroup : GameElement {}
 
     [Serializable]
-    public class Level : GameElement {}
+    public class Level : GameElement {
+    }
 }

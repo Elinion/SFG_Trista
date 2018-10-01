@@ -23,8 +23,14 @@ public class Turn : MonoBehaviour {
     }
 
     public void playTube(Tube tube) {
-        if (!tube.canPlay()) {
+        int distanceFromTargetTile = tube.distanceFromTargetTile();
+        bool canPlay = distanceFromTargetTile != -1;
+        if (!canPlay) {
             return;
+        }
+
+        if (tube.canMergeOrGrow(tube.targetTiles[distanceFromTargetTile])) {
+            tube.targetTiles[distanceFromTargetTile].wiggle();
         }
 
         playerControls.enabled = false;

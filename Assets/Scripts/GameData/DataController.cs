@@ -20,10 +20,9 @@ public class DataController : MonoBehaviour {
     }
 
     private void loadGameData() {
-        Game gameData = Files.readFromJson<Game>(GameDataFileName);
         Debug.Log("DataController:load game data");
-        ByOrderIndexAccessor.loadGame(gameData);
-        Debug.Log("Number of worlds: " + gameData.worlds.Length);
+        Game gameData = Files.readFromJson<Game>(GameDataFileName);
+        ByIndexAccessor.loadGame(gameData);
         worlds = gameData.worlds;
     }
 

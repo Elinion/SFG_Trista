@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/persistent.unity
-    guid: c6b0c0a9e567f40079965973bb0b46af
-  - enabled: 1
     path: Assets/Scenes/loadingScreen.unity
     guid: 632d60659d21a40b1b18c94abca7b8dc
   - enabled: 1
@@ -29,6 +26,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/out_survivalMode.unity
     guid: 05b1cb233f5694a4f8f05155fda34fa1
+  - enabled: 1
+    path: Assets/Scenes/persistent.unity
+    guid: c6b0c0a9e567f40079965973bb0b46af
   - enabled: 1
     path: Assets/Scenes/tuto_1_pattern.unity
     guid: 74ca35ddd823e4e7ca6bc713755ca765

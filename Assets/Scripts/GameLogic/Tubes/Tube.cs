@@ -40,14 +40,23 @@ public class Tube : MonoBehaviour {
     private Dictionary<int, string> shootFromDistanceAnimations = new Dictionary<int, string>();
     private Colors nextColor;
 
+    private void Awake() {
+        SetHintLocations();
+        SetShootFromDistanceAnimations();
+    }
+
+    private void Start() {
+        bulletAnimator.speed = bulletAnimatorSpeed;
+    }
+
     public bool canPlay() {
         return distanceFromTargetTile() != -1;
     }
 
-    private int distanceFromTargetTile() {
+    public int distanceFromTargetTile() {
         for (int i = 0; i < targetTiles.Count; i++) {
             if (targetTiles[i].Color != Colors.None) {
-                return CanMergeOrGrow(targetTiles[i]) ? i : i - 1;
+                return canMergeOrGrow(targetTiles[i]) ? i : i - 1;
             }
         }
 
@@ -87,16 +96,7 @@ public class Tube : MonoBehaviour {
         Color = nextColor;
     }
 
-    private void Awake() {
-        SetHintLocations();
-        SetShootFromDistanceAnimations();
-    }
-
-    private void Start() {
-        bulletAnimator.speed = bulletAnimatorSpeed;
-    }
-
-    private bool CanMergeOrGrow(Tile target) {
+    public bool canMergeOrGrow(Tile target) {
         return target.Color == Color
                || ColorManager.getMergeResult(Color, target.Color) != Colors.None;
     }

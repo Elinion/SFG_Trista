@@ -94,6 +94,10 @@ public class Tile : MonoBehaviour {
             ColorManager.instance.getColorAssets(color).triangle;
     }
 
+    public void wiggle() {
+        GetComponent<Animator>().SetTrigger("Wiggle");
+    }
+
     private void GainColor(Colors otherColor) {
         Color = otherColor;
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
@@ -15,32 +16,34 @@ public class GameProgressWriter {
     private readonly Action<GameProgress.Game> onSaved;
 
     private ISavedGameClient SavedGame {
-        get { return ((PlayGamesPlatform) Social.Active).SavedGame; }
+//        get { return ((PlayGamesPlatform) Social.Active).SavedGame; }
+        get { return null; }
     }
 
     public void save(GameProgress.Game gameProgressToSave) {
         gameProgress = gameProgressToSave;
-        
-        Social.localUser.Authenticate(isAuthenticated => {
-            if (isAuthenticated) {
-                saveGameProgressToCloud();
-            } else {
-                saveGameProgressToDisk();
-            }
-        });
+        saveGameProgressToDisk();
+//        Social.localUser.Authenticate(isAuthenticated => {
+//            if (isAuthenticated) {
+//                saveGameProgressToCloud();
+//            } else {
+//                saveGameProgressToDisk();
+//            }
+//        });
     }
 
     private void saveGameProgressToCloud() {
         Debug.Log("Saving game progress to cloud");
-        SavedGame.OpenWithAutomaticConflictResolution(
-            gameProgressFileName,
-            DataSource.ReadCacheOrNetwork,
-            ConflictResolutionStrategy.UseMostRecentlySaved,
-            onGameProgressOpened);
+//        SavedGame.OpenWithAutomaticConflictResolution(
+//            gameProgressFileName,
+//            DataSource.ReadCacheOrNetwork,
+//            ConflictResolutionStrategy.UseMostRecentlySaved,
+//            onGameProgressOpened);
     }
 
     private void saveGameProgressToDisk() {
-        Debug.Log("Save game progress to disk");
+        Debug.Log("Saving game progress to disk");
+        Files.writeAsJson(gameProgressFileName, gameProgress);
     }
 
     private void onGameProgressOpened(SavedGameRequestStatus status, ISavedGameMetadata game) {
@@ -56,7 +59,7 @@ public class GameProgressWriter {
         SavedGame.CommitUpdate(
             game,
             savedGameMetadataUpdate,
-            gameProgress.toSaveFormat(),
+            gameProgress.toSaveFormatAsBytes(),
             onGameProgressSaved);
     }
 
@@ -66,6 +69,7 @@ public class GameProgressWriter {
             onSaved(null);
             return;
         }
+
         onSaved(gameProgress);
     }
 }

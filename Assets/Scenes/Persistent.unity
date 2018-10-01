@@ -145,56 +145,78 @@ MonoBehaviour:
     tile: {fileID: 21300000, guid: 778c2abf2d57943199f770f3238a309f, type: 3}
     triangle: {fileID: 21300000, guid: cf8f82ae742524776b4431fc7d5b379e, type: 3}
     tube: {fileID: 21300000, guid: 2e0d4e8f377c74ace93954d67f305333, type: 3}
+    squareTile: {fileID: 21300000, guid: a2f9e72deec8e46e5a6fb9626ad00e40, type: 3}
+    hexCode: 212121
   blue:
     ball: {fileID: 21300000, guid: addbce3fd1dad4106987df3693aa7c07, type: 3}
     tile: {fileID: 21300000, guid: 65b264dd582e441ecb4d40c0e7c28843, type: 3}
     triangle: {fileID: 21300000, guid: 1e2d7be44a95f4b14aeafa842bb337dc, type: 3}
     tube: {fileID: 21300000, guid: c4c6307ffb62b479cbb3346d63e62a4d, type: 3}
+    squareTile: {fileID: 21300000, guid: 97e60d7d95e3e4dc7a13bd336f1c95b1, type: 3}
+    hexCode: 479FF8
   gray:
     ball: {fileID: 0}
     tile: {fileID: 21300000, guid: 1f39b07622bb54d9cbe09be97754b5ee, type: 3}
     triangle: {fileID: 21300000, guid: 6d903e26a52e84ca985adb212b07b3ab, type: 3}
     tube: {fileID: 0}
+    squareTile: {fileID: 21300000, guid: dd159a4c2d48143e7b0a2bd57855d526, type: 3}
+    hexCode: B5B6B8
   green:
     ball: {fileID: 21300000, guid: 1347aa40036a947788fce2063aaecfce, type: 3}
     tile: {fileID: 21300000, guid: 2e8bfbb952c8147d7b0fd55aabf62883, type: 3}
     triangle: {fileID: 21300000, guid: db7348347e2554b8aab0518a83ae8d6e, type: 3}
     tube: {fileID: 21300000, guid: 4e56035b078ea4d34a966f63e988d5db, type: 3}
+    squareTile: {fileID: 21300000, guid: 820ce36dba78941009694b43381cb894, type: 3}
+    hexCode: 3E8D27
   multicolor:
     ball: {fileID: 21300000, guid: 1f9cc345b18754743bf7d35feadab6a1, type: 3}
     tile: {fileID: 0}
     triangle: {fileID: 0}
     tube: {fileID: 21300000, guid: 8af2d80ddd66245c4b5ac5c560bcc2af, type: 3}
+    squareTile: {fileID: 0}
+    hexCode: 
   orange:
     ball: {fileID: 21300000, guid: c15262fdd23884f8a9c3313ee9c6075e, type: 3}
     tile: {fileID: 21300000, guid: 34ac6bb8caf6a461eaf04c569e8e44cf, type: 3}
     triangle: {fileID: 21300000, guid: 6a43a4e3f44d9478e8f17b1b369d7157, type: 3}
     tube: {fileID: 21300000, guid: 7634359cf7b1242f29448bf4068c4724, type: 3}
+    squareTile: {fileID: 21300000, guid: 825e55b3cbb104388bea768ba39f394b, type: 3}
+    hexCode: F09937
   purple:
     ball: {fileID: 21300000, guid: db4f62cec4a6f4dd388904825781bfbf, type: 3}
     tile: {fileID: 21300000, guid: 760d2effa29544f3b839805ea26a2baa, type: 3}
     triangle: {fileID: 21300000, guid: faaf3706fc50447bfa205af96f339f00, type: 3}
     tube: {fileID: 21300000, guid: f13a13823a1eb454c989039605b94a66, type: 3}
+    squareTile: {fileID: 21300000, guid: c338effc5cfec4daeb77e85543940de2, type: 3}
+    hexCode: 893DF6
   red:
     ball: {fileID: 21300000, guid: 056be5dea33fc4734830273c19467a47, type: 3}
     tile: {fileID: 21300000, guid: 549f64ef022ed432da314f8648f68e73, type: 3}
     triangle: {fileID: 21300000, guid: 9e5ee499d41164a3bbafdeb57c6a7ca5, type: 3}
     tube: {fileID: 21300000, guid: f09eb91a696de4ad089d42fbd22e8a5f, type: 3}
+    squareTile: {fileID: 21300000, guid: 276b0fc57030d4778bc386b403eb2591, type: 3}
+    hexCode: EA4025
   white:
     ball: {fileID: 21300000, guid: 9c1051ecb81d3449ab8fa52d6cb24cb1, type: 3}
     tile: {fileID: 21300000, guid: 9c680b346beb74ae1b561c0bf00cbd06, type: 3}
     triangle: {fileID: 21300000, guid: 7147d38f44553448d9301e98556abad4, type: 3}
     tube: {fileID: 21300000, guid: 2aafa0d868e53406a88798fd305b949e, type: 3}
+    squareTile: {fileID: 21300000, guid: 011044202b57744cabeb835d9e32fe94, type: 3}
+    hexCode: FFFFFF
   yellow:
     ball: {fileID: 21300000, guid: f0128dd6e28b24d69a188ea30fb45236, type: 3}
     tile: {fileID: 21300000, guid: 242e9aa0ca9c445c1bc1cd9c22aeed66, type: 3}
     triangle: {fileID: 21300000, guid: 6a3282edc92234d09a8d661240635a61, type: 3}
     tube: {fileID: 21300000, guid: d87b99e5551ca4b0aaf7763776649b46, type: 3}
+    squareTile: {fileID: 21300000, guid: e07df21dce61747f6a1512f9ecbd167c, type: 3}
+    hexCode: FCF954
   transparent:
     ball: {fileID: 0}
     tile: {fileID: 21300000, guid: 73944398e334d41e2a975cf5893f7274, type: 3}
     triangle: {fileID: 0}
     tube: {fileID: 0}
+    squareTile: {fileID: 0}
+    hexCode: 
 --- !u!4 &167726834
 Transform:
   m_ObjectHideFlags: 0

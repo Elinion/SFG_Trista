@@ -1,5 +1,6 @@
 ﻿using System;
 using GameProgress;
+using UnityEngine;
 using Level = GameData.Level;
 using LevelGroup = GameData.LevelGroup;
 using World = GameData.World;
@@ -11,10 +12,11 @@ public class GameProgressSynchronizer {
     public void synchronizeGameDataAndProgress(Game gameProgress) {
         gameProgress.init();
         World[] worldsData = DataController.instance.worlds;
+
         State gameState = BestState;
         foreach (World world in worldsData) {
-            if (!gameProgress.worlds.ContainsKey(world.id)) {
-                gameProgress.worlds.Add(world.id, new GameProgress.World {state = DefaultState});
+            if (!gameProgress.worldsById.ContainsKey(world.id)) {
+                gameProgress.worldsById.Add(world.id, new GameProgress.World {id = world.id, state = DefaultState});
                 gameState = getGlobalState(gameState, DefaultState);
             }
 
@@ -30,15 +32,16 @@ public class GameProgressSynchronizer {
     private State synchronizeWorldDataAndProgress(Game gameProgress, World world) {
         State worldState = BestState;
         foreach (LevelGroup levelGroup in world.levelGroups) {
-            if (!gameProgress.levelGroups.ContainsKey(levelGroup.id)) {
-                gameProgress.levelGroups.Add(levelGroup.id, new GameProgress.LevelGroup {state = DefaultState});
+            if (!gameProgress.levelGroupsById.ContainsKey(levelGroup.id)) {
+                gameProgress.levelGroupsById.Add(levelGroup.id,
+                    new GameProgress.LevelGroup {id = levelGroup.id, state = DefaultState});
                 worldState = getGlobalState(worldState, DefaultState);
             }
 
             State levelGroupState = synchronizeLevelsDataAndProgress(gameProgress, levelGroup);
             worldState = getGlobalState(worldState, levelGroupState);
 
-            gameProgress.worlds[world.id].state = worldState;
+            gameProgress.worldsById[world.id].state = worldState;
             gameProgress.markAsSynchronized(levelGroup.id);
         }
 
@@ -48,17 +51,17 @@ public class GameProgressSynchronizer {
     private State synchronizeLevelsDataAndProgress(Game gameProgress, LevelGroup levelGroup) {
         State levelGroupState = BestState;
         foreach (Level level in levelGroup.levels) {
-            if (!gameProgress.levels.ContainsKey(level.id)) {
-                gameProgress.levels.Add(level.id, new GameProgress.Level {state = DefaultState});
+            if (!gameProgress.levelsById.ContainsKey(level.id)) {
+                gameProgress.levelsById.Add(level.id, new GameProgress.Level {id = level.id, state = DefaultState});
                 levelGroupState = getGlobalState(levelGroupState, DefaultState);
             }
 
-            State levelState = gameProgress.levels[level.id].state;
+            State levelState = gameProgress.levelsById[level.id].state;
             levelGroupState = getGlobalState(levelGroupState, levelState);
             gameProgress.markAsSynchronized(level.id);
         }
 
-        gameProgress.levelGroups[levelGroup.id].state = levelGroupState;
+        gameProgress.levelGroupsById[levelGroup.id].state = levelGroupState;
         return levelGroupState;
     }
 

@@ -12,7 +12,6 @@ public class PlayerControls : MonoBehaviour {
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0)) {
             Vector2 mousePosition = getMousePosition();
-            Debug.Log(mousePosition);
             Tube clickedTube = getClickedTube(mousePosition);
             selectTubeToPlay(clickedTube);
         } else if (Input.GetMouseButtonUp(0)) {

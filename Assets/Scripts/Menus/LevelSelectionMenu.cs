@@ -8,6 +8,7 @@ public class LevelSelectionMenu : MonoBehaviour {
     public LevelThumbnail[] levelPreviews = new LevelThumbnail[10];
     public GameObject nextLevelGroupButton;
     public GameObject previousLevelGroupButton;
+    public LevelGroupProgress levelGroupProgress;
 
     void Awake() {
         hideLevelPreviews();
@@ -22,10 +23,21 @@ public class LevelSelectionMenu : MonoBehaviour {
 
     private void setUpUI() {
         LevelGroup levelGroup = GameController.instance.getLevelGroup();
-        levelGroupName.text = levelGroup.name;
+        levelGroupName.text = LocalizationController.instance.getLocalizedValue(levelGroup.name);
+        setUpLevelGroupProgress();
         setUpLevelPreviews(levelGroup.levels);
+        setUpNavButtons();
+    }
+
+    private void setUpNavButtons() {
         nextLevelGroupButton.SetActive(GameController.instance.isNextLevelGroup());
         previousLevelGroupButton.SetActive(GameController.instance.isPreviousLevelGroup());
+    }
+
+    private void setUpLevelGroupProgress() {
+        levelGroupProgress.worldIndex = GameController.instance.getWorld().index;
+        levelGroupProgress.levelGroupIndex = GameController.instance.getLevelGroup().index;
+        levelGroupProgress.computeEarnedStars();
     }
 
     private void setUpLevelPreviews(IList<Level> levels) {

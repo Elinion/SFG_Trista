@@ -5,7 +5,7 @@ namespace GameData {
     public abstract class GameElement {
         public string name;
         public string id;
-        public int orderIndex;
+        public int index;
     }
 
     [Serializable]
@@ -30,6 +30,8 @@ namespace GameData {
         public Colors[] defaultTubeColors;
         public Colors[] tubeColors;
         public Tile[] tiles;
+        public int stars = 1;
+        public int extraTilesAllowedForPerfect = 0;
         public string sceneAdditiveName;
     }
 

@@ -1,4 +1,6 @@
-﻿using GameData;
+﻿using System;
+using System.Collections.Generic;
+using GameData;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -48,7 +50,7 @@ public class GameController : MonoBehaviour {
     }
     
     public void selectLevelGroup(LevelGroup levelGroup) {
-        selectedLevelGroup = levelGroup.orderIndex;
+        selectedLevelGroup = levelGroup.index;
     }
 
     public void selectNextLevelGroup() {
@@ -60,27 +62,31 @@ public class GameController : MonoBehaviour {
     }
 
     public LevelGroup getNextLevelGroup() {
-        return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup + 1);
+        return ByIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup + 1);
     }
 
     public bool isNextLevel() {
-        return ByOrderIndexAccessor.getLevel(selectedWorld, selectedLevelGroup, selectedLevel + 1) != null;
+        return ByIndexAccessor.getLevel(selectedWorld, selectedLevelGroup, selectedLevel + 1) != null;
+    }
+
+    public Level getLevel() {
+        return ByIndexAccessor.getLevel(selectedWorld, selectedLevelGroup, selectedLevel);
     }
 
     public LevelGroup getLevelGroup() {
-        return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup);
+        return ByIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup);
     }
 
     public bool isNextLevelGroup() {
-        return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup + 1) != null;
+        return ByIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup + 1) != null;
     }
 
     public bool isPreviousLevelGroup() {
-        return ByOrderIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup - 1) != null;
+        return ByIndexAccessor.getLevelGroup(selectedWorld, selectedLevelGroup - 1) != null;
     }
 
     public World getWorld() {
-        return ByOrderIndexAccessor.getWorld(selectedWorld);
+        return ByIndexAccessor.getWorld(selectedWorld);
     }
 
     public void playLevel(Level level) {
@@ -94,7 +100,7 @@ public class GameController : MonoBehaviour {
 
     private void setLevel(Level level) {
         this.level = level;
-        selectedLevel = level.orderIndex;
+        selectedLevel = level.index;
     }
 
 

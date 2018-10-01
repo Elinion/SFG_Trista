@@ -2,28 +2,26 @@
 using UnityEngine;
 
 public class Tutorial : MonoBehaviour {
-    public GameObject tutorialMessage;
+
+    public Message tutorialMessage;
+    public GameObject hiddenButton;
 
     private GameObject playerControls;
 
     private void Start() {
         playerControls = GameObject.FindGameObjectWithTag(Tags.Player);
         disablePlayerControls();
-        hideTutorialMessage();
         showTutorialMessageAfterTime(.5f);
     }
 
     public void EndTutorial() {
-        hideTutorialMessage();
+        tutorialMessage.close();
+        hiddenButton.SetActive(false);
         playerControls.SetActive(true);
     }
 
     private void disablePlayerControls() {
         playerControls.SetActive(false);
-    }
-
-    private void hideTutorialMessage() {
-        tutorialMessage.SetActive(false);
     }
 
     private void showTutorialMessageAfterTime(float seconds) {
@@ -32,6 +30,6 @@ public class Tutorial : MonoBehaviour {
 
     private IEnumerator showTutorialMessage(float seconds) {
         yield return new WaitForSeconds(seconds);
-        tutorialMessage.SetActive(true);
+        tutorialMessage.open();
     }
 }

@@ -14,33 +14,37 @@ public class GameProgressLoader {
     private readonly Action<GameProgress.Game> onLoaded;
 
     private ISavedGameClient SavedGame {
+#if UNITY_ANDROID
         get { return ((PlayGamesPlatform) Social.Active).SavedGame; }
+#else
+        get { return null; }
+#endif
     }
 
     public void load() {
-        Social.localUser.Authenticate(isAuthenticated => {
-            if (isAuthenticated) {
-                loadGameProgressFromCloud();
-            } else {
-                loadGameProgressFromDisk();
-            }
-        });
+//        Social.localUser.Authenticate(isAuthenticated => {
+//            if (isAuthenticated) {
+//                loadGameProgressFromCloud();
+//            } else {
+//                loadGameProgressFromDisk();
+//            }
+//        });
+        loadGameProgressFromDisk();
     }
 
     private void loadGameProgressFromCloud() {
         Debug.Log("Loading game progress from cloud");
-        SavedGame.OpenWithAutomaticConflictResolution(
-            gameProgressFileName,
-            DataSource.ReadCacheOrNetwork,
-            ConflictResolutionStrategy.UseMostRecentlySaved,
-            onGameProgressOpened);
+//        SavedGame.OpenWithAutomaticConflictResolution(
+//            gameProgressFileName,
+//            DataSource.ReadCacheOrNetwork,
+//            ConflictResolutionStrategy.UseMostRecentlySaved,
+//            onGameProgressOpened);
     }
 
     private void loadGameProgressFromDisk() {
         Debug.Log("Loading game progress from disk");
-        GameProgress.Game loadedGameProgress = new GameProgress.Game();
-        loadedGameProgress.init();
-        onLoaded(loadedGameProgress);
+        GameProgress.Game gameProgress = Files.readFromJson<GameProgress.Game>(gameProgressFileName) ?? new GameProgress.Game();
+        onLoaded(gameProgress);
     }
 
     private void onGameProgressOpened(SavedGameRequestStatus status, ISavedGameMetadata game) {

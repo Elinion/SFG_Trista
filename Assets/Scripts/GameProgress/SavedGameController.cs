@@ -11,7 +11,7 @@ public class SavedGameController : MonoBehaviour {
 
     private Game gameProgress { get; set; }
 
-    private string gameProgressFileName = "gameProgress";
+    private const string GameProgressFileName = "gameProgress.json";
     private GameProgressSynchronizer gameProgressSynchronizer;
     private GameProgressLoader gameProgressLoader;
     private GameProgressWriter gameProgressWriter;
@@ -26,8 +26,30 @@ public class SavedGameController : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         gameProgressSynchronizer = new GameProgressSynchronizer();
-        gameProgressLoader = new GameProgressLoader(gameProgressFileName, onGameProgressLoaded);
-        gameProgressWriter = new GameProgressWriter(gameProgressFileName, onGameProgressSaved);
+        gameProgressLoader = new GameProgressLoader(GameProgressFileName, onGameProgressLoaded);
+        gameProgressWriter = new GameProgressWriter(GameProgressFileName, onGameProgressSaved);
+    }
+
+    public void loadGameProgress() {
+//        configurePlayGamesClient();
+        gameProgressLoader.load();
+    }
+
+    public State getLevelState(Level level) {
+        if (!gameProgress.levelsById.ContainsKey(level.id)) {
+            logGameElementNotFound(level);
+            return State.NotOk;
+        }
+
+        return gameProgress.levelsById[level.id].state;
+    }
+
+    public State getLevelGroupState(LevelGroup levelGroup) {
+        if (!gameProgress.levelGroupsById.ContainsKey(levelGroup.id)) {
+            logGameElementNotFound(levelGroup);
+        }
+
+        return gameProgress.levelGroupsById[levelGroup.id].state;
     }
 
     private void onGameProgressLoaded(Game loadedGameProgress) {
@@ -43,37 +65,16 @@ public class SavedGameController : MonoBehaviour {
         // todo add saving game spinner
     }
 
-    public void loadGameProgress() {
-        configurePlayGamesClient();
-        gameProgressLoader.load();
-    }
-
-    public State getLevelState(Level level) {
-        if (!gameProgress.levels.ContainsKey(level.id)) {
-            logGameElementNotFound(level);
-        }
-
-        return gameProgress.levels[level.id].state;
-    }
-
-    public State getLevelGroupState(LevelGroup levelGroup) {
-        if (!gameProgress.levelGroups.ContainsKey(levelGroup.id)) {
-            logGameElementNotFound(levelGroup);
-        }
-
-        return gameProgress.levelGroups[levelGroup.id].state;
-    }
-
     private void logGameElementNotFound(GameElement gameElement) {
-        Debug.Log(string.Format("Could not get {0} state. Id not found. Name: {1}. Id: {2}", 
-            gameElement.GetType(), 
-            gameElement.name, 
+        Debug.Log(string.Format("Could not get {0} state. Id not found. Name: {1}. Id: {2}",
+            gameElement.GetType(),
+            gameElement.name,
             gameElement.id));
     }
 
     public void updateLevelState(Level level, State state) {
-        if (gameProgress.levels.ContainsKey(level.id)) {
-            gameProgress.levels[level.id].state = state;
+        if (gameProgress.levelsById.ContainsKey(level.id)) {
+            gameProgress.levelsById[level.id].state = state;
             saveGameProgress();
         } else {
             Debug.Log("Could not save level progress. Id not found: " + level.id);
@@ -81,7 +82,9 @@ public class SavedGameController : MonoBehaviour {
     }
 
     private void saveGameProgress() {
-        gameProgress.score = Random.Range(0, 100);
+        // todo prevent ui to show after each level
+//        gameProgress.score = Random.Range(0, 100);
+        gameProgress.toSaveFormat();
         gameProgressWriter.save(gameProgress);
     }
 
@@ -90,11 +93,13 @@ public class SavedGameController : MonoBehaviour {
     }
 
     private void configurePlayGamesClient() {
+#if UNITY_ANDROID
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
             .EnableSavedGames()
             .Build();
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.Activate();
+#endif
     }
 
     public bool isUserAuthenticated() {
